@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,13 +21,8 @@
   --shadow:0 18px 55px rgba(145,91,122,.13);
 }
 
-* {
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
-
-html { scroll-behavior:smooth; }
+* {box-sizing:border-box;margin:0;padding:0;}
+html {scroll-behavior:smooth;}
 
 body {
   min-height:100vh;
@@ -38,7 +34,7 @@ body {
   animation:backgroundFlow 18s ease infinite;
 }
 
-button { font:inherit; cursor:pointer; }
+button {font:inherit;cursor:pointer;}
 
 button:focus-visible,input:focus-visible,textarea:focus-visible {
   outline:3px solid #b66b91;
@@ -137,7 +133,6 @@ h2 {
 }
 
 h3 {font-size:1.35rem;margin-bottom:10px;}
-
 p {line-height:1.8;}
 
 .eyebrow {
@@ -299,11 +294,7 @@ p {line-height:1.8;}
   color:var(--muted);
 }
 
-.content-card {
-  padding:28px;
-  margin:18px 0;
-}
-
+.content-card {padding:28px;margin:18px 0;}
 .compliment-list {display:grid;gap:13px;}
 
 .compliment {
@@ -483,8 +474,6 @@ p {line-height:1.8;}
 
 .ending-symbol {font-size:3rem;margin-bottom:20px;}
 
-/* SETTINGS DESIGN */
-
 .settings-card {
   padding:30px;
   max-width:560px;
@@ -563,55 +552,55 @@ p {line-height:1.8;}
 
 <div class="decorations" id="decorations" aria-hidden="true"></div>
 
-<!-- WELCOME SCREEN -->
-<section class="screen center-screen active" id="welcome">
+<!-- FIRST-TIME NAME ENTRY -->
+<section class="screen center-screen" id="welcome">
   <div class="welcome-card glass">
     <div class="moon">🌼</div>
     <div class="eyebrow">A small note of friendship</div>
-    <h1 id="welcomeName">Hey, Sunshine!</h1>
-
-    <p class="subtitle" id="welcomeSubtitle">
-      I made a tiny corner of the internet just for you.
-    </p>
+    <h1>Hey, Sunshine!</h1>
+    <p class="subtitle">I made a tiny corner of the internet just for you.</p>
 
     <div style="max-width:340px;margin:0 auto 18px;text-align:left;">
       <label for="visitorName" style="display:block;margin-bottom:8px;color:#805d70;font-weight:600;">
         What should I call you?
       </label>
-
-      <input
-        id="visitorName"
-        type="text"
-        maxlength="40"
-        autocomplete="given-name"
-        placeholder="Enter your name"
-        class="settings-input"
-      >
-
-      <p id="nameError" role="alert" style="display:none;color:#b34f72;font-size:.82rem;margin-top:7px;">
+      <input id="visitorName" type="text" maxlength="40"
+        autocomplete="given-name" placeholder="Enter your name"
+        class="settings-input">
+      <p id="nameError" role="alert"
+        style="display:none;color:#b34f72;font-size:.82rem;margin-top:7px;">
         Please enter your name to continue.
       </p>
     </div>
 
-    <button class="primary-btn" onclick="startExperience()">
-      Let's Explore ✨
-    </button>
-
+    <button class="primary-btn" onclick="startExperience()">Let's Explore ✨</button>
     <p class="small-note">Made with kindness and friendly thoughts.</p>
+  </div>
+</section>
+
+<!-- RETURNING VISITOR WELCOME PAGE -->
+<section class="screen center-screen" id="return-welcome">
+  <div class="welcome-card glass">
+    <div class="moon">🌸</div>
+    <div class="eyebrow">A friendly little welcome</div>
+    <h1 id="returnWelcomeName">Welcome back!</h1>
+    <p class="subtitle">
+      It's lovely to have you here again. Your little corner is waiting for you.
+    </p>
+    <button class="primary-btn" onclick="showScreen('home')">
+      Go to Your Space ✨
+    </button>
+    <p class="small-note">A little place for happy thoughts and friendly memories.</p>
   </div>
 </section>
 
 <!-- HOME SCREEN -->
 <section class="screen" id="home">
-
   <div class="topbar">
     <div class="brand">A Friendly Little Space</div>
-
     <div class="topbar-actions">
-      <button class="settings-btn" onclick="openSettings()" aria-label="Open settings" title="Settings">
-        ⚙️
-      </button>
-      <button class="home-btn" onclick="showScreen('welcome')">Welcome</button>
+      <button class="settings-btn" onclick="openSettings()" aria-label="Open settings" title="Settings">⚙️</button>
+      <button class="home-btn" onclick="showWelcomePage()">Welcome</button>
     </div>
   </div>
 
@@ -623,7 +612,6 @@ p {line-height:1.8;}
     </div>
 
     <div class="section-grid">
-
       <button class="feature-card" onclick="showScreen('little-things')">
         <span class="feature-icon">🌷</span>
         <h3>Things to Appreciate</h3>
@@ -647,7 +635,6 @@ p {line-height:1.8;}
         <h3>Surprise Me</h3>
         <p>Tap to discover a random little message.</p>
       </button>
-
     </div>
 
     <div class="navigation">
@@ -656,22 +643,18 @@ p {line-height:1.8;}
       </button>
     </div>
 
-    <div class="footer">
-      A little corner filled with friendly notes and good wishes.
-    </div>
+    <div class="footer">A little corner filled with friendly notes and good wishes.</div>
   </div>
 </section>
 
-<!-- SETTINGS SCREEN -->
+<!-- SETTINGS -->
 <section class="screen" id="settings">
-
   <div class="topbar">
     <div class="brand">A Friendly Little Space</div>
     <button class="home-btn" onclick="showScreen('home')">← Home</button>
   </div>
 
   <div class="page-content">
-
     <div class="page-heading">
       <div class="eyebrow">Make this space yours</div>
       <h2>Settings ⚙️</h2>
@@ -679,51 +662,29 @@ p {line-height:1.8;}
     </div>
 
     <div class="settings-card glass">
-
       <div style="text-align:center;">
         <div class="settings-icon">🌸</div>
         <h3>Personalise Your Space</h3>
-        <p class="settings-description">
-          You can change the name displayed around the website whenever you like.
-        </p>
+        <p class="settings-description">You can change the name displayed around the website whenever you like.</p>
       </div>
 
-      <label class="settings-label" for="renameInput">
-        Your name
-      </label>
+      <label class="settings-label" for="renameInput">Your name</label>
+      <input type="text" id="renameInput" class="settings-input"
+        maxlength="40" placeholder="Enter a new name">
 
-      <input
-        type="text"
-        id="renameInput"
-        class="settings-input"
-        maxlength="40"
-        placeholder="Enter a new name"
-      >
-
-      <p class="settings-description">
-        This name will appear in your welcome message and home page.
-      </p>
+      <p class="settings-description">This name will appear in your welcome message and home page.</p>
 
       <div class="settings-buttons">
-        <button class="primary-btn" onclick="saveNewName()">
-          Save Changes ✨
-        </button>
-
-        <button class="secondary-btn" onclick="showScreen('home')">
-          Cancel
-        </button>
+        <button class="primary-btn" onclick="saveNewName()">Save Changes ✨</button>
+        <button class="secondary-btn" onclick="showScreen('home')">Cancel</button>
       </div>
 
       <p id="settingsStatus" class="settings-status" role="status" aria-live="polite"></p>
-
     </div>
 
     <div class="back-row">
-      <button class="secondary-btn" onclick="showScreen('home')">
-        ← Back to Home
-      </button>
+      <button class="secondary-btn" onclick="showScreen('home')">← Back to Home</button>
     </div>
-
   </div>
 </section>
 
@@ -795,13 +756,8 @@ p {line-height:1.8;}
 
     <div class="content-card glass diary-compose">
       <label class="diary-label" for="diaryEntry">Dear diary...</label>
-
-      <textarea
-        id="diaryEntry"
-        class="diary-textarea"
-        maxlength="10000"
-        placeholder="Write about your day, a thought, a memory, or anything you want to remember..."
-      ></textarea>
+      <textarea id="diaryEntry" class="diary-textarea" maxlength="10000"
+        placeholder="Write about your day, a thought, a memory, or anything you want to remember..."></textarea>
 
       <div class="diary-compose-footer">
         <span class="diary-hint">Your thoughts, your little space.</span>
@@ -869,34 +825,26 @@ p {line-height:1.8;}
     </p>
     <div style="font-size:2rem;margin:25px 0;">✦ 🌷 ✦</div>
     <button class="primary-btn" onclick="showScreen('home')">Explore a Little More</button>
-    <p class="small-note">That's all for now. Take care! ♡</p>
+    <p class="small-note">That's all for now. Take care!</p>
   </div>
 </section>
 
 <script>
-
-/* ==================================
-   STORAGE KEYS
-================================== */
-
 const VISITOR_NAME_KEY = "friendlyLittleSpaceVisitorName";
 const DIARY_STORAGE_KEY = "friendlyLittleSpaceDiaryEntries";
 
-
-/* ==================================
-   VISITOR NAME AND RENAME SETTINGS
-================================== */
-
 let visitorName = "Sunshine";
+
+/* NAME HANDLING */
 
 function applyVisitorName(name) {
   visitorName = name.trim() || "Sunshine";
 
-  document.getElementById("welcomeName").textContent =
-    "Hey, " + visitorName + "!";
-
   document.getElementById("homeGreeting").textContent =
     "Welcome, " + visitorName + "!";
+
+  document.getElementById("returnWelcomeName").textContent =
+    "Welcome back, " + visitorName + "!";
 }
 
 function startExperience() {
@@ -920,11 +868,31 @@ function startExperience() {
   showScreen("home");
 }
 
+function showWelcomePage() {
+  const savedName = getSavedName();
+
+  if (!savedName) {
+    showScreen("welcome");
+    return;
+  }
+
+  applyVisitorName(savedName);
+  showScreen("return-welcome");
+}
+
+function getSavedName() {
+  try {
+    return localStorage.getItem(VISITOR_NAME_KEY);
+  } catch (error) {
+    return null;
+  }
+}
+
+/* SETTINGS AND RENAME */
+
 function openSettings() {
   document.getElementById("renameInput").value = visitorName;
-
   document.getElementById("settingsStatus").textContent = "";
-
   showScreen("settings");
   document.getElementById("renameInput").focus();
 }
@@ -932,7 +900,6 @@ function openSettings() {
 function saveNewName() {
   const input = document.getElementById("renameInput");
   const status = document.getElementById("settingsStatus");
-
   const newName = input.value.trim();
 
   if (!newName) {
@@ -955,9 +922,7 @@ function saveNewName() {
   status.style.color = "#6e8b70";
   status.textContent = "Your name has been updated successfully! 🌸";
 
-  setTimeout(() => {
-    showScreen("home");
-  }, 1000);
+  setTimeout(() => showScreen("home"), 1000);
 }
 
 document.getElementById("visitorName").addEventListener("keydown", event => {
@@ -968,24 +933,18 @@ document.getElementById("renameInput").addEventListener("keydown", event => {
   if (event.key === "Enter") saveNewName();
 });
 
+/* FIRST VISIT OR RETURNING VISIT */
 
-/* ==================================
-   RETURNING VISITOR
-================================== */
+const savedVisitorName = getSavedName();
 
-try {
-  const savedName = localStorage.getItem(VISITOR_NAME_KEY);
+if (savedVisitorName && savedVisitorName.trim()) {
+  applyVisitorName(savedVisitorName);
+  showScreen("home");
+} else {
+  showScreen("welcome");
+}
 
-  if (savedName && savedName.trim()) {
-    applyVisitorName(savedName);
-    showScreen("home");
-  }
-} catch (error) {}
-
-
-/* ==================================
-   SCREEN NAVIGATION
-================================== */
+/* NAVIGATION */
 
 function showScreen(screenId) {
   document.querySelectorAll(".screen").forEach(screen => {
@@ -1003,15 +962,10 @@ function showScreen(screenId) {
     document.getElementById("envelopeMessage").classList.remove("show");
   }
 
-  if (screenId === "diary") {
-    renderDiaryEntries();
-  }
+  if (screenId === "diary") renderDiaryEntries();
 }
 
-
-/* ==================================
-   THINGS TO APPRECIATE
-================================== */
+/* THINGS TO APPRECIATE */
 
 const compliments = [
   "You bring a positive energy to the people around you.",
@@ -1034,42 +988,21 @@ function loadCompliments() {
   });
 }
 
-
-/* ==================================
-   OPEN WHEN ENVELOPES
-================================== */
+/* OPEN WHEN */
 
 const openWhenMessages = [
-  {
-    title:"When you're having a difficult day",
-    icon:"☁️",
-    message:"Take things one step at a time. You don't have to figure everything out today. Be patient with yourself."
-  },
-  {
-    title:"When you need a smile",
-    icon:"🌻",
-    message:"Here's a little reminder that good moments are still waiting ahead. I hope something lovely happens to you today."
-  },
-  {
-    title:"When you feel tired",
-    icon:"🌙",
-    message:"It's okay to slow down and take a break. You deserve rest just as much as you deserve success."
-  },
-  {
-    title:"When you need encouragement",
-    icon:"⭐",
-    message:"Keep going at your own pace. You are capable of learning, growing and doing wonderful things."
-  },
-  {
-    title:"When you feel unnoticed",
-    icon:"💗",
-    message:"The little things you do matter more than you might realise. Never underestimate the good you bring into the world."
-  },
-  {
-    title:"When you just want a friendly note",
-    icon:"💌",
-    message:"Hello! This is your random reminder to smile, drink some water and remember that today can still be lovely."
-  }
+  {title:"When you're having a difficult day",icon:"☁️",
+   message:"Take things one step at a time. You don't have to figure everything out today. Be patient with yourself."},
+  {title:"When you need a smile",icon:"🌻",
+   message:"Here's a little reminder that good moments are still waiting ahead. I hope something lovely happens to you today."},
+  {title:"When you feel tired",icon:"🌙",
+   message:"It's okay to slow down and take a break. You deserve rest just as much as you deserve success."},
+  {title:"When you need encouragement",icon:"⭐",
+   message:"Keep going at your own pace. You are capable of learning, growing and doing wonderful things."},
+  {title:"When you feel unnoticed",icon:"💗",
+   message:"The little things you do matter more than you might realise. Never underestimate the good you bring into the world."},
+  {title:"When you just want a friendly note",icon:"💌",
+   message:"Hello! This is your random reminder to smile, drink some water and remember that today can still be lovely."}
 ];
 
 function loadEnvelopes() {
@@ -1090,9 +1023,7 @@ function loadEnvelopes() {
     hint.textContent = "Tap to open";
 
     button.append(icon,title,hint);
-
     button.addEventListener("click",() => openEnvelope(index));
-
     grid.appendChild(button);
   });
 }
@@ -1104,24 +1035,17 @@ function openEnvelope(index) {
   document.getElementById("envelopeText").textContent = item.message;
 
   const box = document.getElementById("envelopeMessage");
-
   box.classList.remove("show");
 
-  requestAnimationFrame(() => {
-    box.classList.add("show");
-  });
+  requestAnimationFrame(() => box.classList.add("show"));
 }
 
-
-/* ==================================
-   PERSONAL DIARY
-================================== */
+/* PERSONAL DIARY */
 
 function getDiaryEntries() {
   try {
     const saved = localStorage.getItem(DIARY_STORAGE_KEY);
     const entries = saved ? JSON.parse(saved) : [];
-
     return Array.isArray(entries) ? entries : [];
   } catch (error) {
     return [];
@@ -1149,10 +1073,8 @@ function saveDiaryEntry() {
 
   try {
     localStorage.setItem(DIARY_STORAGE_KEY,JSON.stringify(entries));
-
     field.value = "";
     status.textContent = "Your diary entry has been saved. 🌷";
-
     renderDiaryEntries();
   } catch (error) {
     status.textContent = "Couldn't save this entry. Please try again.";
@@ -1167,7 +1089,6 @@ function deleteDiaryEntry(id) {
   try {
     localStorage.setItem(DIARY_STORAGE_KEY,JSON.stringify(entries));
     renderDiaryEntries();
-
     document.getElementById("diaryStatus").textContent = "Entry deleted.";
   } catch (error) {
     document.getElementById("diaryStatus").textContent = "Couldn't update the diary.";
@@ -1180,7 +1101,6 @@ function renderDiaryEntries() {
   const entries = getDiaryEntries();
 
   container.innerHTML = "";
-
   count.textContent = entries.length +
     (entries.length === 1 ? " entry" : " entries");
 
@@ -1200,7 +1120,6 @@ function renderDiaryEntries() {
     date.className = "diary-entry-date";
 
     const parsedDate = new Date(entry.createdAt);
-
     date.textContent = Number.isNaN(parsedDate.getTime())
       ? "Saved entry"
       : new Intl.DateTimeFormat(undefined,{
@@ -1218,7 +1137,6 @@ function renderDiaryEntries() {
     const remove = document.createElement("button");
     remove.className = "diary-delete";
     remove.textContent = "Delete entry";
-
     remove.addEventListener("click",() => deleteDiaryEntry(entry.id));
 
     actions.appendChild(remove);
@@ -1227,10 +1145,7 @@ function renderDiaryEntries() {
   });
 }
 
-
-/* ==================================
-   SURPRISE ME
-================================== */
+/* SURPRISE ME */
 
 const surpriseMessages = [
   "Hope your day has a little extra colour and happiness. 🌈",
@@ -1256,7 +1171,6 @@ function newSurprise() {
   lastSurpriseIndex = index;
 
   const display = document.getElementById("surpriseMessage");
-
   display.style.animation = "none";
   display.textContent = surpriseMessages[index];
 
@@ -1265,10 +1179,7 @@ function newSurprise() {
   });
 }
 
-
-/* ==================================
-   FLOATING DECORATIONS
-================================== */
+/* FLOATING DECORATIONS */
 
 const decorationSymbols = ["✿","✦","✧","❀","⋆","☀","❋"];
 
@@ -1277,9 +1188,9 @@ function createDecoration() {
   const item = document.createElement("span");
 
   item.className = "floating";
-
-  item.textContent =
-    decorationSymbols[Math.floor(Math.random()*decorationSymbols.length)];
+  item.textContent = decorationSymbols[
+    Math.floor(Math.random()*decorationSymbols.length)
+  ];
 
   item.style.left = Math.random()*100 + "%";
   item.style.fontSize = (12+Math.random()*20) + "px";
@@ -1287,14 +1198,10 @@ function createDecoration() {
   item.style.opacity = .3+Math.random()*.4;
 
   container.appendChild(item);
-
   setTimeout(() => item.remove(),19000);
 }
 
-
-/* ==================================
-   INITIALISE
-================================== */
+/* INITIALISE */
 
 loadCompliments();
 loadEnvelopes();
@@ -1307,6 +1214,5 @@ for (let i=0;i<12;i++) {
 setInterval(createDecoration,850);
 
 </script>
-
 </body>
 </html>
