@@ -1,8 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#f8dce9">
 <title>A Friendly Little Space</title>
 
@@ -20,11 +21,20 @@
   --shadow:0 18px 55px rgba(145,91,122,.13);
 }
 
-* {box-sizing:border-box;margin:0;padding:0;}
-html {scroll-behavior:smooth;}
+* {
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html {
+  scroll-behavior:smooth;
+  -webkit-text-size-adjust:100%;
+}
 
 body {
   min-height:100vh;
+  min-height:100dvh;
   overflow-x:hidden;
   font-family:"DM Sans",sans-serif;
   color:var(--text);
@@ -33,7 +43,15 @@ body {
   animation:backgroundFlow 18s ease infinite;
 }
 
-button {font:inherit;cursor:pointer;}
+button,input,textarea {
+  font:inherit;
+}
+
+button {
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
 
 button:focus-visible,input:focus-visible,textarea:focus-visible {
   outline:3px solid #b66b91;
@@ -55,36 +73,44 @@ button:focus-visible,input:focus-visible,textarea:focus-visible {
   50% {box-shadow:0 0 55px #eaa5c8;}
 }
 
+/* Important: opacity-only animation prevents fixed popup positioning issues */
+
 @keyframes fadeIn {
-  from {opacity:0;transform:translateY(18px);}
-  to {opacity:1;transform:translateY(0);}
+  from {opacity:0;}
+  to {opacity:1;}
 }
 
 @keyframes pop {
-  from {opacity:0;transform:scale(.92);}
+  from {opacity:0;transform:scale(.96);}
   to {opacity:1;transform:scale(1);}
 }
 
 .screen {
   display:none;
   min-height:100vh;
+  min-height:100dvh;
   position:relative;
   z-index:1;
   padding:35px 18px 60px;
   animation:fadeIn .6s ease both;
 }
 
-.screen.active {display:block;}
+.screen.active {
+  display:block;
+}
 
 .center-screen {
   display:none;
   min-height:100vh;
+  min-height:100dvh;
   align-items:center;
   justify-content:center;
   text-align:center;
 }
 
-.center-screen.active {display:flex;}
+.center-screen.active {
+  display:flex;
+}
 
 .glass {
   background:var(--glass);
@@ -131,8 +157,14 @@ h2 {
   margin-bottom:12px;
 }
 
-h3 {font-size:1.35rem;margin-bottom:10px;}
-p {line-height:1.8;}
+h3 {
+  font-size:1.35rem;
+  margin-bottom:10px;
+}
+
+p {
+  line-height:1.8;
+}
 
 .eyebrow {
   color:var(--deep-pink);
@@ -156,6 +188,7 @@ p {line-height:1.8;}
   padding:13px 25px;
   transition:transform .25s,box-shadow .25s;
   font-weight:700;
+  min-height:46px;
 }
 
 .primary-btn {
@@ -233,6 +266,7 @@ p {line-height:1.8;}
   color:#93627d;
   padding:9px 15px;
   border-radius:22px;
+  min-height:42px;
 }
 
 .settings-btn {
@@ -308,8 +342,15 @@ p {line-height:1.8;}
   color:var(--muted);
 }
 
-.content-card {padding:28px;margin:18px 0;}
-.compliment-list {display:grid;gap:13px;}
+.content-card {
+  padding:28px;
+  margin:18px 0;
+}
+
+.compliment-list {
+  display:grid;
+  gap:13px;
+}
 
 .compliment {
   padding:17px 19px;
@@ -335,29 +376,58 @@ p {line-height:1.8;}
   transition:transform .25s;
 }
 
-.envelope:hover {transform:translateY(-4px) rotate(-1deg);}
-.envelope span {display:block;font-size:2rem;margin-bottom:10px;}
-.envelope strong {display:block;margin-bottom:5px;}
-.envelope small {color:var(--muted);}
+.envelope:hover {
+  transform:translateY(-4px) rotate(-1deg);
+}
 
-/* FULL-SCREEN OPEN WHEN NOTE */
+.envelope span {
+  display:block;
+  font-size:2rem;
+  margin-bottom:10px;
+}
+
+.envelope strong {
+  display:block;
+  margin-bottom:5px;
+}
+
+.envelope small {
+  color:var(--muted);
+}
+
+/* MOBILE-FRIENDLY FULL-SCREEN OPEN WHEN NOTE */
 
 .message-box {
   display:none;
   position:fixed;
   inset:0;
-  z-index:1000;
+  z-index:10000;
+
   width:100%;
   height:100%;
-  min-height:100vh;
+  height:100dvh;
+  min-height:100svh;
+
   margin:0;
-  padding:25px;
+  padding:
+    max(65px,env(safe-area-inset-top))
+    18px
+    max(25px,env(safe-area-inset-bottom));
+
   border:0;
   border-radius:0;
+
   background:linear-gradient(135deg,#fce5ed,#eee8ff,#fff0e5,#f8dce9);
+
   align-items:center;
   justify-content:center;
   text-align:center;
+
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+
   animation:pop .35s ease both;
 }
 
@@ -366,13 +436,20 @@ p {line-height:1.8;}
 }
 
 .message-content {
-  width:min(100%,650px);
+  width:100%;
+  max-width:650px;
+  flex:0 0 auto;
+
+  margin:auto;
   padding:55px 35px;
+
   border-radius:28px;
-  background:rgba(255,255,255,.72);
+  background:rgba(255,255,255,.82);
   border:1px solid rgba(255,255,255,.9);
   box-shadow:0 18px 55px rgba(145,91,122,.16);
+
   backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
 }
 
 .message-icon {
@@ -382,6 +459,7 @@ p {line-height:1.8;}
 
 .message-content h3 {
   font-size:clamp(1.5rem,5vw,2.2rem);
+  line-height:1.35;
   margin-bottom:20px;
 }
 
@@ -389,17 +467,21 @@ p {line-height:1.8;}
   font-size:1.05rem;
   line-height:2;
   color:var(--text);
+  overflow-wrap:anywhere;
 }
 
 .close-message {
-  position:absolute;
-  top:25px;
-  right:25px;
+  position:fixed;
+  top:max(15px,env(safe-area-inset-top));
+  right:max(15px,env(safe-area-inset-right));
+
+  z-index:10002;
+
   width:45px;
   height:45px;
   border:1px solid rgba(217,130,170,.3);
   border-radius:50%;
-  background:rgba(255,255,255,.8);
+  background:rgba(255,255,255,.9);
   color:#93627d;
   font-size:1.3rem;
   display:grid;
@@ -412,7 +494,9 @@ p {line-height:1.8;}
   background:white;
 }
 
-.diary-compose {padding:26px;}
+.diary-compose {
+  padding:26px;
+}
 
 .diary-label {
   display:block;
@@ -458,9 +542,18 @@ p {line-height:1.8;}
   font-size:.88rem;
 }
 
-.diary-list-heading {margin:30px 2px 14px;}
-.diary-list-heading h3 {margin:0;}
-.diary-entries {display:grid;gap:14px;}
+.diary-list-heading {
+  margin:30px 2px 14px;
+}
+
+.diary-list-heading h3 {
+  margin:0;
+}
+
+.diary-entries {
+  display:grid;
+  gap:14px;
+}
 
 .diary-entry {
   padding:21px;
@@ -512,7 +605,10 @@ p {line-height:1.8;}
   line-height:1.6;
 }
 
-.surprise-card {text-align:center;padding:35px 24px;}
+.surprise-card {
+  text-align:center;
+  padding:35px 24px;
+}
 
 .surprise-message {
   min-height:95px;
@@ -539,7 +635,10 @@ p {line-height:1.8;}
   margin-top:45px;
 }
 
-.back-row {text-align:center;margin-top:30px;}
+.back-row {
+  text-align:center;
+  margin-top:30px;
+}
 
 .ending-card {
   width:min(92%,600px);
@@ -548,7 +647,10 @@ p {line-height:1.8;}
   margin:30px auto;
 }
 
-.ending-symbol {font-size:3rem;margin-bottom:20px;}
+.ending-symbol {
+  font-size:3rem;
+  margin-bottom:20px;
+}
 
 .settings-card {
   padding:30px;
@@ -623,13 +725,157 @@ p {line-height:1.8;}
   font-size:.88rem;
 }
 
+/* TABLET AND PHONE LAYOUT */
+
+@media(max-width:760px) {
+  .section-grid {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .page-content {
+    width:100%;
+  }
+}
+
 @media(max-width:560px) {
-  .section-grid,.envelope-grid {grid-template-columns:1fr;}
-  .welcome-card,.ending-card {padding:35px 22px;}
-  .content-card,.settings-card {padding:21px;}
-  .topbar {padding:0 3px;}
-  .message-content {padding:40px 22px;}
-  .close-message {top:15px;right:15px;}
+  .screen {
+    padding:20px 14px 35px;
+  }
+
+  .center-screen {
+    padding:16px 12px;
+  }
+
+  .section-grid,.envelope-grid {
+    grid-template-columns:1fr;
+    gap:13px;
+  }
+
+  .welcome-card,.ending-card {
+    width:100%;
+    padding:32px 20px;
+    margin:12px auto;
+  }
+
+  .content-card,.settings-card {
+    padding:20px;
+  }
+
+  .topbar {
+    padding:0 3px;
+    margin-bottom:22px;
+  }
+
+  .brand {
+    font-size:1rem;
+  }
+
+  .home-btn {
+    padding:9px 12px;
+    font-size:.85rem;
+  }
+
+  .page-heading {
+    margin:20px 0 25px;
+  }
+
+  .page-heading h2 {
+    font-size:clamp(1.8rem,8vw,2.3rem);
+  }
+
+  .feature-card {
+    padding:20px;
+  }
+
+  .envelope {
+    min-height:125px;
+    padding:18px 12px;
+  }
+
+  .message-box {
+    padding:
+      max(65px,env(safe-area-inset-top))
+      15px
+      max(25px,env(safe-area-inset-bottom));
+  }
+
+  .message-content {
+    padding:35px 21px;
+    border-radius:25px;
+  }
+
+  .message-icon {
+    font-size:3rem;
+    margin-bottom:15px;
+  }
+
+  .message-content h3 {
+    font-size:clamp(1.5rem,6vw,2rem);
+    margin-bottom:15px;
+  }
+
+  .message-content p {
+    font-size:1rem;
+    line-height:1.8;
+  }
+
+  .message-content .primary-btn {
+    max-width:100%;
+    padding:13px 20px;
+  }
+
+  .close-message {
+    width:42px;
+    height:42px;
+  }
+
+  .diary-compose-footer {
+    align-items:stretch;
+  }
+
+  .diary-compose-footer .primary-btn {
+    width:100%;
+  }
+
+  .settings-buttons button {
+    flex:1 1 100%;
+  }
+
+  .surprise-message {
+    font-size:1.2rem;
+  }
+
+  .navigation button {
+    width:100%;
+  }
+
+  .footer {
+    margin-top:30px;
+  }
+}
+
+/* SHORT PHONE SCREENS */
+
+@media(max-width:560px) and (max-height:700px) {
+  .message-box {
+    align-items:flex-start;
+  }
+
+  .message-content {
+    margin-top:0;
+    margin-bottom:0;
+  }
+
+  .welcome-card {
+    padding:24px 18px;
+  }
+
+  .moon {
+    width:80px;
+    height:80px;
+    font-size:35px;
+    margin-bottom:15px;
+  }
 }
 
 @media(prefers-reduced-motion:reduce) {
@@ -818,23 +1064,24 @@ p {line-height:1.8;}
 
     <div class="envelope-grid" id="envelopeGrid"></div>
 
-    <div class="message-box" id="envelopeMessage" aria-live="polite">
-      <button class="close-message" onclick="closeEnvelope()" aria-label="Close note">✕</button>
-      <div class="message-content">
-        <div class="message-icon" id="envelopeIcon">🌷</div>
-        <h3 id="envelopeTitle">A little note</h3>
-        <p id="envelopeText"></p>
-        <div style="margin-top:30px;">
-          <button class="primary-btn" onclick="closeEnvelope()">Back to Envelopes</button>
-        </div>
-      </div>
-    </div>
-
     <div class="back-row">
       <button class="secondary-btn" onclick="showScreen('home')">Back to Home</button>
     </div>
   </div>
 </section>
+
+<!-- Popup is now outside the animated sections -->
+<div class="message-box" id="envelopeMessage" aria-live="polite">
+  <button class="close-message" onclick="closeEnvelope()" aria-label="Close note">✕</button>
+  <div class="message-content">
+    <div class="message-icon" id="envelopeIcon">🌷</div>
+    <h3 id="envelopeTitle">A little note</h3>
+    <p id="envelopeText"></p>
+    <div style="margin-top:30px;">
+      <button class="primary-btn" onclick="closeEnvelope()">Back to Envelopes</button>
+    </div>
+  </div>
+</div>
 
 <section class="screen" id="diary">
   <div class="topbar">
@@ -1180,9 +1427,12 @@ function openEnvelope(index) {
   document.getElementById("envelopeTitle").textContent = item.title;
   document.getElementById("envelopeText").textContent = item.message;
 
-  document.getElementById("envelopeMessage").classList.add("show");
+  const popup = document.getElementById("envelopeMessage");
 
+  popup.classList.add("show");
   document.body.style.overflow = "hidden";
+
+  popup.scrollTop = 0;
 }
 
 function closeEnvelope() {
@@ -1190,6 +1440,7 @@ function closeEnvelope() {
 
   if (box) {
     box.classList.remove("show");
+    box.scrollTop = 0;
   }
 
   document.body.style.overflow = "";
