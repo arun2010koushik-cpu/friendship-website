@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -298,6 +297,127 @@
       color: var(--muted);
     }
 
+    /* PERSONAL DIARY STYLES */
+
+    .diary-compose {
+      padding: 26px;
+    }
+
+    .diary-label {
+      display: block;
+      margin-bottom: 12px;
+      color: #875c74;
+      font-family: "Playfair Display", serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    .diary-textarea {
+      display: block;
+      width: 100%;
+      min-height: 190px;
+      resize: vertical;
+      padding: 17px;
+      border: 1px solid rgba(217,130,170,.32);
+      border-radius: 17px;
+      background: rgba(255,255,255,.78);
+      color: var(--text);
+      font: inherit;
+      line-height: 1.8;
+      outline-color: var(--deep-pink);
+    }
+
+    .diary-compose-footer, .diary-list-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .diary-hint, .diary-storage-note {
+      color: var(--muted);
+      font-size: .82rem;
+    }
+
+    .diary-status {
+      min-height: 1.4em;
+      margin-top: 10px;
+      color: #6e8b70;
+      font-size: .88rem;
+    }
+
+    .diary-list-heading {
+      margin: 30px 2px 14px;
+    }
+
+    .diary-list-heading h3 {
+      margin: 0;
+    }
+
+    .diary-count {
+      color: var(--muted);
+      font-size: .85rem;
+    }
+
+    .diary-entries {
+      display: grid;
+      gap: 14px;
+    }
+
+    .diary-entry {
+      padding: 21px;
+      border: 1px solid rgba(255,255,255,.85);
+      border-radius: 19px;
+      background: rgba(255,255,255,.72);
+      box-shadow: 0 8px 24px rgba(145,91,122,.07);
+    }
+
+    .diary-entry-date {
+      margin-bottom: 12px;
+      color: #a66d8b;
+      font-size: .78rem;
+      font-weight: 700;
+    }
+
+    .diary-entry-text {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      line-height: 1.8;
+    }
+
+    .diary-entry-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 14px;
+    }
+
+    .diary-delete {
+      border: 1px solid rgba(190,100,130,.25);
+      border-radius: 20px;
+      padding: 7px 13px;
+      background: rgba(255,245,248,.9);
+      color: #a45e78;
+      cursor: pointer;
+      font-size: .82rem;
+    }
+
+    .diary-empty {
+      padding: 28px 18px;
+      border: 1px dashed rgba(190,130,160,.4);
+      border-radius: 18px;
+      color: var(--muted);
+      text-align: center;
+      background: rgba(255,255,255,.38);
+    }
+
+    .diary-storage-note {
+      margin: 18px 4px 0;
+      text-align: center;
+      line-height: 1.6;
+    }
+
     .content-card {
       padding: 28px;
       margin: 18px 0;
@@ -364,37 +484,6 @@
       display: block;
     }
 
-    .memory-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 17px;
-    }
-
-    .memory-card {
-      overflow: hidden;
-      border-radius: 20px;
-      background: rgba(255,255,255,.7);
-      border: 1px solid white;
-      box-shadow: 0 10px 25px rgba(145,91,122,.08);
-    }
-
-    .memory-placeholder {
-      min-height: 155px;
-      display: grid;
-      place-items: center;
-      font-size: 3rem;
-      background: linear-gradient(135deg, #f8d9e8, #e6dcfa);
-    }
-
-    .memory-caption {
-      padding: 17px;
-    }
-
-    .memory-caption p {
-      color: var(--muted);
-      font-size: .88rem;
-    }
-
     .surprise-card {
       text-align: center;
       padding: 35px 24px;
@@ -447,7 +536,7 @@
     }
 
     @media (max-width: 560px) {
-      .section-grid, .envelope-grid, .memory-grid {
+      .section-grid, .envelope-grid {
         grid-template-columns: 1fr;
       }
 
@@ -484,19 +573,38 @@
       <div class="moon">🌼</div>
       <div class="eyebrow">A small note of friendship</div>
       <h1 id="welcomeName">Hey, Sunshine!</h1>
+
       <p class="subtitle" id="welcomeSubtitle">
         I put together a small page with cheerful notes and friendly reminders. Just a friendly gesture—take your time and explore.
       </p>
+
       <div id="nameEntry" style="max-width:340px;margin:0 auto 18px;text-align:left;">
-        <label for="visitorName" style="display:block;margin-bottom:8px;color:#805d70;font-weight:600;">What should I call you?</label>
-        <input id="visitorName" type="text" maxlength="40" autocomplete="given-name"
+        <label for="visitorName" style="display:block;margin-bottom:8px;color:#805d70;font-weight:600;">
+          What should I call you?
+        </label>
+
+        <input
+          id="visitorName"
+          type="text"
+          maxlength="40"
+          autocomplete="given-name"
           placeholder="Enter your name"
-          style="width:100%;padding:13px 16px;border:1px solid #e7bfd2;border-radius:16px;background:rgba(255,255,255,.8);color:#594653;font:inherit;outline-color:#d982aa;">
-        <p id="nameError" role="alert" style="display:none;color:#b34f72;font-size:.82rem;margin-top:7px;">Please enter your name to continue.</p>
+          style="width:100%;padding:13px 16px;border:1px solid #e7bfd2;border-radius:16px;background:rgba(255,255,255,.8);color:#594653;font:inherit;outline-color:#d982aa;"
+        >
+
+        <p
+          id="nameError"
+          role="alert"
+          style="display:none;color:#b34f72;font-size:.82rem;margin-top:7px;"
+        >
+          Please enter your name to continue.
+        </p>
       </div>
+
       <button class="primary-btn" onclick="startExperience()">
         Let's Explore ✨
       </button>
+
       <p class="small-note">Made with kindness and friendly thoughts.</p>
     </div>
   </section>
@@ -516,6 +624,7 @@
       </div>
 
       <div class="section-grid">
+
         <button class="feature-card" onclick="showScreen('little-things')">
           <span class="feature-icon">🌷</span>
           <h3>Things to Appreciate</h3>
@@ -528,10 +637,11 @@
           <p>Little notes for different kinds of days.</p>
         </button>
 
-        <button class="feature-card" onclick="showScreen('memories')">
-          <span class="feature-icon">📸</span>
-          <h3>Shared Good Moments</h3>
-          <p>A place to remember fun moments and good times.</p>
+        <!-- PERSONAL DIARY CARD -->
+        <button class="feature-card" onclick="showScreen('diary')">
+          <span class="feature-icon">📔</span>
+          <h3>Personal Diary</h3>
+          <p>A little place to write down thoughts and save them with the date and time.</p>
         </button>
 
         <button class="feature-card" onclick="showScreen('surprise')">
@@ -539,6 +649,7 @@
           <h3>Surprise Me</h3>
           <p>Tap to discover a random little message.</p>
         </button>
+
       </div>
 
       <div class="navigation">
@@ -547,11 +658,13 @@
         </button>
       </div>
 
-      <div class="footer">A little corner filled with friendly notes and good wishes.</div>
+      <div class="footer">
+        A little corner filled with friendly notes and good wishes.
+      </div>
     </div>
   </section>
 
-  <!-- LITTLE THINGS SCREEN -->
+  <!-- THINGS TO APPRECIATE SCREEN -->
   <section class="screen" id="little-things">
     <div class="topbar">
       <div class="brand">A Friendly Little Space</div>
@@ -562,7 +675,9 @@
       <div class="page-heading">
         <div class="eyebrow">A few friendly reminders</div>
         <h2>Things to Appreciate 🌷</h2>
-        <p>Sometimes small acts of kindness and the good qualities in people deserve appreciation.</p>
+        <p>
+          Sometimes small acts of kindness and the good qualities in people deserve appreciation.
+        </p>
       </div>
 
       <div class="content-card glass">
@@ -570,7 +685,9 @@
       </div>
 
       <div class="back-row">
-        <button class="secondary-btn" onclick="showScreen('home')">Back to the home page</button>
+        <button class="secondary-btn" onclick="showScreen('home')">
+          Back to the home page
+        </button>
       </div>
     </div>
   </section>
@@ -598,30 +715,82 @@
       </div>
 
       <div class="back-row">
-        <button class="secondary-btn" onclick="showScreen('home')">Back to the home page</button>
+        <button class="secondary-btn" onclick="showScreen('home')">
+          Back to the home page
+        </button>
       </div>
     </div>
   </section>
 
-  <!-- MEMORIES SCREEN -->
-  <section class="screen" id="memories">
+  <!-- PERSONAL DIARY SCREEN -->
+  <section class="screen" id="diary">
     <div class="topbar">
       <div class="brand">A Friendly Little Space</div>
       <button class="home-btn" onclick="showScreen('home')">← Home</button>
     </div>
 
     <div class="page-content">
+
       <div class="page-heading">
-        <div class="eyebrow">Good moments to remember</div>
-        <h2>Shared Good Moments 📸</h2>
-        <p>Good memories are always nice to look back on.</p>
+        <div class="eyebrow">A little space for her thoughts</div>
+        <h2>Personal Diary 📔</h2>
+        <p>
+          Write whatever is on your mind. Each entry is saved with the date and time.
+        </p>
       </div>
 
-      <div class="memory-grid" id="memoryGrid"></div>
+      <div class="content-card glass diary-compose">
+
+        <label class="diary-label" for="diaryEntry">
+          Dear diary...
+        </label>
+
+        <textarea
+          id="diaryEntry"
+          class="diary-textarea"
+          maxlength="10000"
+          placeholder="Write about your day, a thought, a memory, or anything you want to remember..."
+        ></textarea>
+
+        <div class="diary-compose-footer">
+          <span class="diary-hint">
+            Only you can write in this little space.
+          </span>
+
+          <button
+            class="primary-btn"
+            type="button"
+            onclick="saveDiaryEntry()"
+          >
+            Save entry ✨
+          </button>
+        </div>
+
+        <p
+          id="diaryStatus"
+          class="diary-status"
+          role="status"
+          aria-live="polite"
+        ></p>
+      </div>
+
+      <div class="diary-list-heading">
+        <h3>Your diary entries</h3>
+        <span id="diaryCount" class="diary-count">0 entries</span>
+      </div>
+
+      <div id="diaryEntries" class="diary-entries"></div>
+
+      <p class="diary-storage-note">
+        🔒 Entries are saved in this browser on this device. They won't automatically sync to another phone or computer.
+      </p>
 
       <div class="back-row">
-        <button class="secondary-btn" onclick="showScreen('home')">Back to the home page</button>
+        <button class="secondary-btn" onclick="showScreen('home')">
+          Back to the home page
+        </button>
       </div>
+
     </div>
   </section>
 
@@ -641,16 +810,20 @@
 
       <div class="content-card glass surprise-card">
         <div style="font-size:3rem;">🎀</div>
+
         <div class="surprise-message" id="surpriseMessage" aria-live="polite">
           Ready for a little surprise?
         </div>
+
         <button class="primary-btn" onclick="newSurprise()">
           Show me something ✨
         </button>
       </div>
 
       <div class="back-row">
-        <button class="secondary-btn" onclick="showScreen('home')">Back to the home page</button>
+        <button class="secondary-btn" onclick="showScreen('home')">
+          Back to the home page
+        </button>
       </div>
     </div>
   </section>
@@ -661,14 +834,18 @@
       <div class="ending-symbol">🌸</div>
       <div class="eyebrow">Before you go</div>
       <h2 id="endingTitle">A Friendly Reminder</h2>
+
       <p id="endingMessage">
         No matter how ordinary a day may seem, there is always something
         lovely about the little things. I hope this tiny corner made you smile.
       </p>
+
       <div style="font-size:2rem;margin:25px 0;">✦ 🌷 ✦</div>
+
       <button class="primary-btn" onclick="showScreen('home')">
         Explore a little more
       </button>
+
       <p class="small-note">That's all for now. Take care! ♡</p>
     </div>
   </section>
@@ -676,8 +853,6 @@
   <script>
     /* =========================================
        PERSONAL DETAILS
-       Change these details to personalize
-       the website later.
     ========================================= */
 
     const personalDetails = {
@@ -729,29 +904,6 @@
         }
       ],
 
-      memories: [
-        {
-          emoji: "🌷",
-          title: "A little moment",
-          description: "Replace this with a memory you both share."
-        },
-        {
-          emoji: "☀️",
-          title: "A happy day",
-          description: "Add a special moment and what made it memorable."
-        },
-        {
-          emoji: "🎀",
-          title: "Something funny",
-          description: "Write about a funny conversation or shared joke."
-        },
-        {
-          emoji: "🌙",
-          title: "A moment to remember",
-          description: "Save another little memory here."
-        }
-      ],
-
       surpriseMessages: [
         "Hope your day has a little extra colour and happiness. 🌈",
         "Here's a reminder to be proud of how far you've come. 🌷",
@@ -763,12 +915,14 @@
       ],
 
       endingTitle: "A Friendly Reminder",
+
       endingMessage:
         "Even an ordinary day can have a few good moments. I hope this little page brought a smile to your face. Take care, and all the best!"
     };
 
+
     /* =========================================
-       WEBSITE SETUP
+       WEBSITE SETUP AND VISITOR NAME
     ========================================= */
 
     document.title = personalDetails.websiteTitle;
@@ -777,8 +931,12 @@
 
     function applyVisitorName(name) {
       const safeName = name.trim();
-      document.getElementById("welcomeName").textContent = "Hey, " + safeName + "!";
-      document.getElementById("homeGreeting").textContent = "Welcome, " + safeName + "!";
+
+      document.getElementById("welcomeName").textContent =
+        "Hey, " + safeName + "!";
+
+      document.getElementById("homeGreeting").textContent =
+        "Welcome, " + safeName + "!";
     }
 
     function startExperience() {
@@ -793,10 +951,11 @@
       }
 
       error.style.display = "none";
+
       try {
         localStorage.setItem(VISITOR_NAME_KEY, name);
       } catch (error) {
-        // The name will still be used for this visit if browser storage is unavailable.
+        // Name is still used for this visit if storage is unavailable.
       }
 
       applyVisitorName(name);
@@ -806,17 +965,20 @@
     document.getElementById("welcomeSubtitle").textContent =
       personalDetails.welcomeSubtitle;
 
-    // Returning visitors go straight to the home screen on this browser/device.
+    // Returning visitors go directly to the home screen.
     try {
       const savedName = localStorage.getItem(VISITOR_NAME_KEY);
+
       if (savedName && savedName.trim()) {
         applyVisitorName(savedName);
         showScreen("home");
       } else {
-        document.getElementById("welcomeName").textContent = "Hey, Sunshine!";
+        document.getElementById("welcomeName").textContent =
+          "Hey, Sunshine!";
       }
     } catch (error) {
-      document.getElementById("welcomeName").textContent = "Hey, Sunshine!";
+      document.getElementById("welcomeName").textContent =
+        "Hey, Sunshine!";
     }
 
     document.getElementById("endingTitle").textContent =
@@ -825,9 +987,15 @@
     document.getElementById("endingMessage").textContent =
       personalDetails.endingMessage;
 
-    document.getElementById("visitorName").addEventListener("keydown", event => {
-      if (event.key === "Enter") startExperience();
-    });
+    document.getElementById("visitorName").addEventListener(
+      "keydown",
+      event => {
+        if (event.key === "Enter") {
+          startExperience();
+        }
+      }
+    );
+
 
     /* =========================================
        SCREEN NAVIGATION
@@ -846,25 +1014,36 @@
       }
 
       if (screenId === "open-when") {
-        document.getElementById("envelopeMessage").classList.remove("show");
+        document
+          .getElementById("envelopeMessage")
+          .classList.remove("show");
+      }
+
+      if (screenId === "diary") {
+        renderDiaryEntries();
       }
     }
 
+
     /* =========================================
-       LITTLE THINGS
+       THINGS TO APPRECIATE
     ========================================= */
 
     function loadCompliments() {
       const list = document.getElementById("complimentList");
+
       list.innerHTML = "";
 
-      personalDetails.compliments.forEach((message, index) => {
+      personalDetails.compliments.forEach(message => {
         const item = document.createElement("div");
+
         item.className = "compliment";
         item.textContent = "♡  " + message;
+
         list.appendChild(item);
       });
     }
+
 
     /* =========================================
        OPEN WHEN ENVELOPES
@@ -872,10 +1051,12 @@
 
     function loadEnvelopes() {
       const grid = document.getElementById("envelopeGrid");
+
       grid.innerHTML = "";
 
       personalDetails.openWhenMessages.forEach((item, index) => {
         const button = document.createElement("button");
+
         button.className = "envelope";
 
         const icon = document.createElement("span");
@@ -888,7 +1069,11 @@
         hint.textContent = "Tap to open";
 
         button.append(icon, title, hint);
-        button.addEventListener("click", () => openEnvelope(index));
+
+        button.addEventListener("click", () => {
+          openEnvelope(index);
+        });
+
         grid.appendChild(button);
       });
     }
@@ -896,10 +1081,14 @@
     function openEnvelope(index) {
       const item = personalDetails.openWhenMessages[index];
 
-      document.getElementById("envelopeTitle").textContent = item.title;
-      document.getElementById("envelopeText").textContent = item.message;
+      document.getElementById("envelopeTitle").textContent =
+        item.title;
+
+      document.getElementById("envelopeText").textContent =
+        item.message;
 
       const box = document.getElementById("envelopeMessage");
+
       box.classList.remove("show");
 
       requestAnimationFrame(() => {
@@ -907,36 +1096,170 @@
       });
     }
 
+
     /* =========================================
-       MEMORY CARDS
+       PERSONAL DIARY
     ========================================= */
 
-    function loadMemories() {
-      const grid = document.getElementById("memoryGrid");
-      grid.innerHTML = "";
+    const DIARY_STORAGE_KEY =
+      "friendlyLittleSpaceDiaryEntries";
 
-      personalDetails.memories.forEach(memory => {
+    function getDiaryEntries() {
+      try {
+        const saved = localStorage.getItem(DIARY_STORAGE_KEY);
+
+        const entries = saved ? JSON.parse(saved) : [];
+
+        return Array.isArray(entries) ? entries : [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveDiaryEntry() {
+      const field = document.getElementById("diaryEntry");
+      const status = document.getElementById("diaryStatus");
+
+      const text = field.value.trim();
+
+      if (!text) {
+        status.textContent =
+          "Write a little something before saving.";
+
+        field.focus();
+        return;
+      }
+
+      const entries = getDiaryEntries();
+
+      entries.unshift({
+        id:
+          Date.now().toString(36) +
+          Math.random().toString(36).slice(2),
+
+        text: text,
+
+        createdAt: new Date().toISOString()
+      });
+
+      try {
+        localStorage.setItem(
+          DIARY_STORAGE_KEY,
+          JSON.stringify(entries)
+        );
+
+        field.value = "";
+
+        status.textContent =
+          "Your diary entry has been saved. 🌷";
+
+        renderDiaryEntries();
+
+      } catch (error) {
+        status.textContent =
+          "Couldn't save this entry. This browser may be out of storage space or have storage disabled.";
+      }
+    }
+
+    function deleteDiaryEntry(id) {
+      if (!confirm("Delete this diary entry? This cannot be undone.")) {
+        return;
+      }
+
+      const entries = getDiaryEntries().filter(
+        entry => entry.id !== id
+      );
+
+      try {
+        localStorage.setItem(
+          DIARY_STORAGE_KEY,
+          JSON.stringify(entries)
+        );
+
+        renderDiaryEntries();
+
+        document.getElementById("diaryStatus").textContent =
+          "Entry deleted.";
+
+      } catch (error) {
+        document.getElementById("diaryStatus").textContent =
+          "Couldn't update the diary. Please try again.";
+      }
+    }
+
+    function renderDiaryEntries() {
+      const container =
+        document.getElementById("diaryEntries");
+
+      const count =
+        document.getElementById("diaryCount");
+
+      const entries = getDiaryEntries();
+
+      container.innerHTML = "";
+
+      count.textContent =
+        entries.length +
+        (entries.length === 1 ? " entry" : " entries");
+
+      if (!entries.length) {
+        const empty = document.createElement("div");
+
+        empty.className = "diary-empty";
+
+        empty.textContent =
+          "No entries yet. Your first little note can go here. ✨";
+
+        container.appendChild(empty);
+
+        return;
+      }
+
+      entries.forEach(entry => {
         const card = document.createElement("article");
-        card.className = "memory-card";
 
-        const placeholder = document.createElement("div");
-        placeholder.className = "memory-placeholder";
-        placeholder.textContent = memory.emoji;
+        card.className = "diary-entry";
 
-        const caption = document.createElement("div");
-        caption.className = "memory-caption";
+        const date = document.createElement("div");
 
-        const heading = document.createElement("h3");
-        heading.textContent = memory.title;
+        date.className = "diary-entry-date";
 
-        const description = document.createElement("p");
-        description.textContent = memory.description;
+        const parsedDate = new Date(entry.createdAt);
 
-        caption.append(heading, description);
-        card.append(placeholder, caption);
-        grid.appendChild(card);
+        date.textContent = Number.isNaN(parsedDate.getTime())
+          ? "Saved entry"
+          : new Intl.DateTimeFormat(undefined, {
+              dateStyle: "full",
+              timeStyle: "short"
+            }).format(parsedDate);
+
+        const body = document.createElement("p");
+
+        body.className = "diary-entry-text";
+        body.textContent = entry.text;
+
+        const actions = document.createElement("div");
+
+        actions.className = "diary-entry-actions";
+
+        const remove = document.createElement("button");
+
+        remove.className = "diary-delete";
+        remove.type = "button";
+        remove.textContent = "Delete entry";
+
+        remove.addEventListener("click", () => {
+          deleteDiaryEntry(entry.id);
+        });
+
+        actions.appendChild(remove);
+
+        card.append(date, body, actions);
+
+        container.appendChild(card);
       });
     }
+
 
     /* =========================================
        RANDOM SURPRISE
@@ -949,18 +1272,25 @@
 
       if (!messages.length) return;
 
-      let index = Math.floor(Math.random() * messages.length);
+      let index = Math.floor(
+        Math.random() * messages.length
+      );
 
       if (messages.length > 1) {
         while (index === lastSurpriseIndex) {
-          index = Math.floor(Math.random() * messages.length);
+          index = Math.floor(
+            Math.random() * messages.length
+          );
         }
       }
 
       lastSurpriseIndex = index;
 
-      const display = document.getElementById("surpriseMessage");
+      const display =
+        document.getElementById("surpriseMessage");
+
       display.style.animation = "none";
+
       display.textContent = messages[index];
 
       requestAnimationFrame(() => {
@@ -968,43 +1298,61 @@
       });
     }
 
+
     /* =========================================
        FLOATING DECORATIONS
     ========================================= */
 
-    const decorationSymbols = ["✿", "✦", "✧", "❀", "⋆", "☀", "❋"];
+    const decorationSymbols = [
+      "✿", "✦", "✧", "❀", "⋆", "☀", "❋"
+    ];
 
     function createDecoration() {
-      const container = document.getElementById("decorations");
+      const container =
+        document.getElementById("decorations");
+
       const item = document.createElement("span");
 
       item.className = "floating";
+
       item.textContent =
-        decorationSymbols[Math.floor(Math.random() * decorationSymbols.length)];
+        decorationSymbols[
+          Math.floor(Math.random() * decorationSymbols.length)
+        ];
 
       item.style.left = Math.random() * 100 + "%";
-      item.style.fontSize = (12 + Math.random() * 20) + "px";
-      item.style.animationDuration = (9 + Math.random() * 9) + "s";
-      item.style.opacity = 0.3 + Math.random() * 0.4;
+
+      item.style.fontSize =
+        (12 + Math.random() * 20) + "px";
+
+      item.style.animationDuration =
+        (9 + Math.random() * 9) + "s";
+
+      item.style.opacity =
+        0.3 + Math.random() * 0.4;
 
       container.appendChild(item);
 
       setTimeout(() => item.remove(), 19000);
     }
 
+
     /* =========================================
        INITIALIZE EVERYTHING
     ========================================= */
 
     loadCompliments();
+
     loadEnvelopes();
-    loadMemories();
+
+    renderDiaryEntries();
 
     for (let i = 0; i < 12; i++) {
       setTimeout(createDecoration, i * 250);
     }
 
     setInterval(createDecoration, 850);
+
   </script>
 </body>
 </html>
