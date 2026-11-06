@@ -1,1358 +1,1312 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#f8dce9">
-  <title>A Friendly Little Space</title>
-
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
-
-    :root {
-      --pink: #f5c8dc;
-      --deep-pink: #d982aa;
-      --lavender: #dcd5f5;
-      --cream: #fff9f5;
-      --text: #594653;
-      --muted: #917b89;
-      --glass: rgba(255, 255, 255, 0.63);
-      --shadow: 0 18px 55px rgba(145, 91, 122, 0.13);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      min-height: 100vh;
-      overflow-x: hidden;
-      font-family: "DM Sans", sans-serif;
-      color: var(--text);
-      background: linear-gradient(135deg, #fce5ed, #eee8ff, #fff0e5, #f8dce9);
-      background-size: 400% 400%;
-      animation: backgroundFlow 18s ease infinite;
-    }
-
-    button {
-      font: inherit;
-    }
-
-    button:focus-visible {
-      outline: 3px solid #b66b91;
-      outline-offset: 4px;
-    }
-
-    @keyframes backgroundFlow {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-17px) rotate(8deg); }
-    }
-
-    @keyframes glow {
-      0%, 100% { box-shadow: 0 0 25px #f4b7d2; }
-      50% { box-shadow: 0 0 55px #eaa5c8; }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(18px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes pop {
-      from { opacity: 0; transform: scale(.92); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    .decorations {
-      position: fixed;
-      inset: 0;
-      overflow: hidden;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .floating {
-      position: absolute;
-      bottom: -40px;
-      color: rgba(190, 111, 153, .45);
-      animation: floatUp linear infinite;
-      user-select: none;
-    }
-
-    @keyframes floatUp {
-      to {
-        transform: translateY(-115vh) rotate(360deg);
-        opacity: 0;
-      }
-    }
-
-    .screen {
-      display: none;
-      min-height: 100vh;
-      position: relative;
-      z-index: 1;
-      padding: 35px 18px 60px;
-      animation: fadeIn .6s ease both;
-    }
-
-    .screen.active {
-      display: block;
-    }
-
-    .center-screen {
-      display: none;
-      min-height: 100vh;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-
-    .center-screen.active {
-      display: flex;
-    }
-
-    .glass {
-      background: var(--glass);
-      border: 1px solid rgba(255,255,255,.75);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      box-shadow: var(--shadow);
-      border-radius: 27px;
-    }
-
-    .welcome-card {
-      width: min(92%, 520px);
-      padding: 45px 28px;
-      margin: 25px auto;
-      text-align: center;
-    }
-
-    .moon {
-      width: 105px;
-      height: 105px;
-      border-radius: 50%;
-      margin: 0 auto 25px;
-      background: linear-gradient(145deg, #fff8d9, #f5c4dc);
-      animation: glow 4s ease-in-out infinite, float 5s ease-in-out infinite;
-      display: grid;
-      place-items: center;
-      font-size: 43px;
-    }
-
-    .eyebrow {
-      color: var(--deep-pink);
-      font-size: .78rem;
-      font-weight: 700;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      margin-bottom: 13px;
-    }
-
-    h1, h2, h3 {
-      font-family: "Playfair Display", serif;
-      font-weight: 600;
-    }
-
-    h1 {
-      font-size: clamp(2.5rem, 8vw, 4rem);
-      line-height: 1.15;
-      margin-bottom: 15px;
-    }
-
-    h2 {
-      font-size: clamp(2rem, 6vw, 2.8rem);
-      margin-bottom: 12px;
-    }
-
-    h3 {
-      font-size: 1.35rem;
-      margin-bottom: 10px;
-    }
-
-    p {
-      line-height: 1.8;
-    }
-
-    .subtitle {
-      color: var(--muted);
-      max-width: 390px;
-      margin: 0 auto 28px;
-      font-size: .98rem;
-    }
-
-    .primary-btn, .secondary-btn {
-      border: none;
-      border-radius: 30px;
-      padding: 13px 25px;
-      cursor: pointer;
-      transition: transform .25s, box-shadow .25s, background .25s;
-      font-weight: 700;
-    }
-
-    .primary-btn {
-      color: white;
-      background: linear-gradient(135deg, #dc8eb3, #bda5df);
-      box-shadow: 0 8px 22px rgba(190, 116, 158, .25);
-    }
-
-    .secondary-btn {
-      color: #9b6381;
-      background: rgba(255,255,255,.7);
-      border: 1px solid rgba(217,130,170,.3);
-    }
-
-    .primary-btn:hover, .secondary-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 25px rgba(190, 116, 158, .2);
-    }
-
-    .small-note {
-      margin-top: 22px;
-      color: #a58c9a;
-      font-size: .8rem;
-    }
-
-    .topbar {
-      width: min(100%, 950px);
-      margin: 0 auto 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .brand {
-      font-family: "Playfair Display", serif;
-      font-size: 1.2rem;
-      color: #a76689;
-    }
-
-    .home-btn {
-      border: 1px solid rgba(217,130,170,.3);
-      background: rgba(255,255,255,.6);
-      color: #93627d;
-      padding: 9px 16px;
-      border-radius: 22px;
-      cursor: pointer;
-    }
-
-    .page-content {
-      width: min(100%, 850px);
-      margin: 0 auto;
-    }
-
-    .page-heading {
-      text-align: center;
-      margin: 30px 0 35px;
-    }
-
-    .page-heading p {
-      color: var(--muted);
-      max-width: 500px;
-      margin: 0 auto;
-    }
-
-    .section-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 17px;
-    }
-
-    .feature-card {
-      padding: 24px;
-      text-align: left;
-      border-radius: 23px;
-      border: 1px solid rgba(255,255,255,.8);
-      background: rgba(255,255,255,.65);
-      box-shadow: 0 10px 30px rgba(145,91,122,.08);
-      cursor: pointer;
-      transition: transform .25s, background .25s;
-      color: var(--text);
-    }
-
-    .feature-card:hover {
-      transform: translateY(-5px);
-      background: rgba(255,255,255,.88);
-    }
-
-    .feature-icon {
-      font-size: 2rem;
-      display: block;
-      margin-bottom: 12px;
-    }
-
-    .feature-card p {
-      font-size: .9rem;
-      color: var(--muted);
-    }
-
-    /* PERSONAL DIARY STYLES */
-
-    .diary-compose {
-      padding: 26px;
-    }
-
-    .diary-label {
-      display: block;
-      margin-bottom: 12px;
-      color: #875c74;
-      font-family: "Playfair Display", serif;
-      font-size: 1.3rem;
-      font-weight: 600;
-    }
-
-    .diary-textarea {
-      display: block;
-      width: 100%;
-      min-height: 190px;
-      resize: vertical;
-      padding: 17px;
-      border: 1px solid rgba(217,130,170,.32);
-      border-radius: 17px;
-      background: rgba(255,255,255,.78);
-      color: var(--text);
-      font: inherit;
-      line-height: 1.8;
-      outline-color: var(--deep-pink);
-    }
-
-    .diary-compose-footer, .diary-list-heading {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      flex-wrap: wrap;
-      margin-top: 16px;
-    }
-
-    .diary-hint, .diary-storage-note {
-      color: var(--muted);
-      font-size: .82rem;
-    }
-
-    .diary-status {
-      min-height: 1.4em;
-      margin-top: 10px;
-      color: #6e8b70;
-      font-size: .88rem;
-    }
-
-    .diary-list-heading {
-      margin: 30px 2px 14px;
-    }
-
-    .diary-list-heading h3 {
-      margin: 0;
-    }
-
-    .diary-count {
-      color: var(--muted);
-      font-size: .85rem;
-    }
-
-    .diary-entries {
-      display: grid;
-      gap: 14px;
-    }
-
-    .diary-entry {
-      padding: 21px;
-      border: 1px solid rgba(255,255,255,.85);
-      border-radius: 19px;
-      background: rgba(255,255,255,.72);
-      box-shadow: 0 8px 24px rgba(145,91,122,.07);
-    }
-
-    .diary-entry-date {
-      margin-bottom: 12px;
-      color: #a66d8b;
-      font-size: .78rem;
-      font-weight: 700;
-    }
-
-    .diary-entry-text {
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      line-height: 1.8;
-    }
-
-    .diary-entry-actions {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 14px;
-    }
-
-    .diary-delete {
-      border: 1px solid rgba(190,100,130,.25);
-      border-radius: 20px;
-      padding: 7px 13px;
-      background: rgba(255,245,248,.9);
-      color: #a45e78;
-      cursor: pointer;
-      font-size: .82rem;
-    }
-
-    .diary-empty {
-      padding: 28px 18px;
-      border: 1px dashed rgba(190,130,160,.4);
-      border-radius: 18px;
-      color: var(--muted);
-      text-align: center;
-      background: rgba(255,255,255,.38);
-    }
-
-    .diary-storage-note {
-      margin: 18px 4px 0;
-      text-align: center;
-      line-height: 1.6;
-    }
-
-    .content-card {
-      padding: 28px;
-      margin: 18px 0;
-    }
-
-    .compliment-list {
-      display: grid;
-      gap: 13px;
-    }
-
-    .compliment {
-      padding: 17px 19px;
-      border-radius: 17px;
-      background: rgba(255,255,255,.65);
-      border: 1px solid rgba(255,255,255,.8);
-      line-height: 1.7;
-    }
-
-    .envelope-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .envelope {
-      min-height: 145px;
-      border: 1px solid rgba(255,255,255,.9);
-      border-radius: 20px;
-      background: linear-gradient(145deg, #fff8fb, #f5eafa);
-      padding: 20px 12px;
-      cursor: pointer;
-      color: var(--text);
-      transition: transform .25s;
-    }
-
-    .envelope:hover {
-      transform: translateY(-4px) rotate(-1deg);
-    }
-
-    .envelope span {
-      display: block;
-      font-size: 2rem;
-      margin-bottom: 10px;
-    }
-
-    .envelope strong {
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .envelope small {
-      color: var(--muted);
-    }
-
-    .message-box {
-      display: none;
-      margin-top: 22px;
-      padding: 25px;
-      text-align: center;
-      animation: pop .35s ease both;
-    }
-
-    .message-box.show {
-      display: block;
-    }
-
-    .surprise-card {
-      text-align: center;
-      padding: 35px 24px;
-    }
-
-    .surprise-message {
-      min-height: 95px;
-      display: grid;
-      place-items: center;
-      font-family: "Playfair Display", serif;
-      font-size: 1.4rem;
-      line-height: 1.6;
-      margin: 20px 0;
-    }
-
-    .ending-card {
-      width: min(92%, 600px);
-      padding: 45px 28px;
-      text-align: center;
-      margin: 30px auto;
-    }
-
-    .ending-symbol {
-      font-size: 3rem;
-      margin-bottom: 20px;
-    }
-
-    .navigation {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin: 30px auto 0;
-    }
-
-    .footer {
-      text-align: center;
-      color: #a58c9a;
-      font-size: .8rem;
-      margin-top: 45px;
-    }
-
-    .back-row {
-      text-align: center;
-      margin-top: 30px;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    @media (max-width: 560px) {
-      .section-grid, .envelope-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .welcome-card, .ending-card {
-        padding: 35px 22px;
-      }
-
-      .content-card {
-        padding: 21px;
-      }
-
-      .topbar {
-        padding: 0 3px;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
-        scroll-behavior: auto !important;
-        transition-duration: .01ms !important;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f8dce9">
+<title>A Friendly Little Space</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
+
+:root {
+  --pink:#f5c8dc;
+  --deep-pink:#d982aa;
+  --lavender:#dcd5f5;
+  --cream:#fff9f5;
+  --text:#594653;
+  --muted:#917b89;
+  --glass:rgba(255,255,255,.63);
+  --shadow:0 18px 55px rgba(145,91,122,.13);
+}
+
+* {
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html { scroll-behavior:smooth; }
+
+body {
+  min-height:100vh;
+  overflow-x:hidden;
+  font-family:"DM Sans",sans-serif;
+  color:var(--text);
+  background:linear-gradient(135deg,#fce5ed,#eee8ff,#fff0e5,#f8dce9);
+  background-size:400% 400%;
+  animation:backgroundFlow 18s ease infinite;
+}
+
+button { font:inherit; cursor:pointer; }
+
+button:focus-visible,input:focus-visible,textarea:focus-visible {
+  outline:3px solid #b66b91;
+  outline-offset:3px;
+}
+
+@keyframes backgroundFlow {
+  0%,100% {background-position:0% 50%;}
+  50% {background-position:100% 50%;}
+}
+
+@keyframes float {
+  0%,100% {transform:translateY(0) rotate(0deg);}
+  50% {transform:translateY(-17px) rotate(8deg);}
+}
+
+@keyframes glow {
+  0%,100% {box-shadow:0 0 25px #f4b7d2;}
+  50% {box-shadow:0 0 55px #eaa5c8;}
+}
+
+@keyframes fadeIn {
+  from {opacity:0;transform:translateY(18px);}
+  to {opacity:1;transform:translateY(0);}
+}
+
+@keyframes pop {
+  from {opacity:0;transform:scale(.92);}
+  to {opacity:1;transform:scale(1);}
+}
+
+.screen {
+  display:none;
+  min-height:100vh;
+  position:relative;
+  z-index:1;
+  padding:35px 18px 60px;
+  animation:fadeIn .6s ease both;
+}
+
+.screen.active {display:block;}
+
+.center-screen {
+  display:none;
+  min-height:100vh;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+.center-screen.active {display:flex;}
+
+.glass {
+  background:var(--glass);
+  border:1px solid rgba(255,255,255,.75);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  box-shadow:var(--shadow);
+  border-radius:27px;
+}
+
+.decorations {
+  position:fixed;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+  z-index:0;
+}
+
+.floating {
+  position:absolute;
+  bottom:-40px;
+  color:rgba(190,111,153,.45);
+  animation:floatUp linear infinite;
+  user-select:none;
+}
+
+@keyframes floatUp {
+  to {transform:translateY(-115vh) rotate(360deg);opacity:0;}
+}
+
+h1,h2,h3 {
+  font-family:"Playfair Display",serif;
+  font-weight:600;
+}
+
+h1 {
+  font-size:clamp(2.5rem,8vw,4rem);
+  line-height:1.15;
+  margin-bottom:15px;
+}
+
+h2 {
+  font-size:clamp(2rem,6vw,2.8rem);
+  margin-bottom:12px;
+}
+
+h3 {font-size:1.35rem;margin-bottom:10px;}
+
+p {line-height:1.8;}
+
+.eyebrow {
+  color:var(--deep-pink);
+  font-size:.78rem;
+  font-weight:700;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  margin-bottom:13px;
+}
+
+.subtitle {
+  color:var(--muted);
+  max-width:390px;
+  margin:0 auto 28px;
+  font-size:.98rem;
+}
+
+.primary-btn,.secondary-btn {
+  border:none;
+  border-radius:30px;
+  padding:13px 25px;
+  transition:transform .25s,box-shadow .25s;
+  font-weight:700;
+}
+
+.primary-btn {
+  color:white;
+  background:linear-gradient(135deg,#dc8eb3,#bda5df);
+  box-shadow:0 8px 22px rgba(190,116,158,.25);
+}
+
+.secondary-btn {
+  color:#9b6381;
+  background:rgba(255,255,255,.7);
+  border:1px solid rgba(217,130,170,.3);
+}
+
+.primary-btn:hover,.secondary-btn:hover {
+  transform:translateY(-3px);
+  box-shadow:0 12px 25px rgba(190,116,158,.2);
+}
+
+.welcome-card {
+  width:min(92%,520px);
+  padding:45px 28px;
+  margin:25px auto;
+  text-align:center;
+}
+
+.moon {
+  width:105px;
+  height:105px;
+  border-radius:50%;
+  margin:0 auto 25px;
+  background:linear-gradient(145deg,#fff8d9,#f5c4dc);
+  animation:glow 4s ease-in-out infinite,float 5s ease-in-out infinite;
+  display:grid;
+  place-items:center;
+  font-size:43px;
+}
+
+.small-note {
+  margin-top:22px;
+  color:#a58c9a;
+  font-size:.8rem;
+}
+
+.topbar {
+  width:min(100%,950px);
+  margin:0 auto 30px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+
+.brand {
+  font-family:"Playfair Display",serif;
+  font-size:1.2rem;
+  color:#a76689;
+}
+
+.topbar-actions {
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+
+.home-btn,.settings-btn {
+  border:1px solid rgba(217,130,170,.3);
+  background:rgba(255,255,255,.6);
+  color:#93627d;
+  padding:9px 15px;
+  border-radius:22px;
+}
+
+.settings-btn {
+  font-size:1.05rem;
+  width:42px;
+  height:42px;
+  padding:0;
+  display:grid;
+  place-items:center;
+  transition:transform .25s,background .25s;
+}
+
+.settings-btn:hover {
+  transform:rotate(35deg);
+  background:rgba(255,255,255,.95);
+}
+
+.page-content {
+  width:min(100%,850px);
+  margin:0 auto;
+}
+
+.page-heading {
+  text-align:center;
+  margin:30px 0 35px;
+}
+
+.page-heading p {
+  color:var(--muted);
+  max-width:500px;
+  margin:0 auto;
+}
+
+.section-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:17px;
+}
+
+.feature-card {
+  padding:24px;
+  text-align:left;
+  border-radius:23px;
+  border:1px solid rgba(255,255,255,.8);
+  background:rgba(255,255,255,.65);
+  box-shadow:0 10px 30px rgba(145,91,122,.08);
+  transition:transform .25s,background .25s;
+  color:var(--text);
+}
+
+.feature-card:hover {
+  transform:translateY(-5px);
+  background:rgba(255,255,255,.88);
+}
+
+.feature-icon {
+  font-size:2rem;
+  display:block;
+  margin-bottom:12px;
+}
+
+.feature-card p {
+  font-size:.9rem;
+  color:var(--muted);
+}
+
+.content-card {
+  padding:28px;
+  margin:18px 0;
+}
+
+.compliment-list {display:grid;gap:13px;}
+
+.compliment {
+  padding:17px 19px;
+  border-radius:17px;
+  background:rgba(255,255,255,.65);
+  border:1px solid rgba(255,255,255,.8);
+  line-height:1.7;
+}
+
+.envelope-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px;
+}
+
+.envelope {
+  min-height:145px;
+  border:1px solid rgba(255,255,255,.9);
+  border-radius:20px;
+  background:linear-gradient(145deg,#fff8fb,#f5eafa);
+  padding:20px 12px;
+  color:var(--text);
+  transition:transform .25s;
+}
+
+.envelope:hover {transform:translateY(-4px) rotate(-1deg);}
+.envelope span {display:block;font-size:2rem;margin-bottom:10px;}
+.envelope strong {display:block;margin-bottom:5px;}
+.envelope small {color:var(--muted);}
+
+.message-box {
+  display:none;
+  margin-top:22px;
+  padding:25px;
+  text-align:center;
+  animation:pop .35s ease both;
+}
+
+.message-box.show {display:block;}
+
+.diary-compose {padding:26px;}
+
+.diary-label {
+  display:block;
+  margin-bottom:12px;
+  color:#875c74;
+  font-family:"Playfair Display",serif;
+  font-size:1.3rem;
+  font-weight:600;
+}
+
+.diary-textarea {
+  display:block;
+  width:100%;
+  min-height:190px;
+  resize:vertical;
+  padding:17px;
+  border:1px solid rgba(217,130,170,.32);
+  border-radius:17px;
+  background:rgba(255,255,255,.78);
+  color:var(--text);
+  font:inherit;
+  line-height:1.8;
+}
+
+.diary-compose-footer,.diary-list-heading {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
+
+.diary-hint,.diary-storage-note,.diary-count {
+  color:var(--muted);
+  font-size:.82rem;
+}
+
+.diary-status {
+  min-height:1.4em;
+  margin-top:10px;
+  color:#6e8b70;
+  font-size:.88rem;
+}
+
+.diary-list-heading {margin:30px 2px 14px;}
+.diary-list-heading h3 {margin:0;}
+.diary-entries {display:grid;gap:14px;}
+
+.diary-entry {
+  padding:21px;
+  border:1px solid rgba(255,255,255,.85);
+  border-radius:19px;
+  background:rgba(255,255,255,.72);
+  box-shadow:0 8px 24px rgba(145,91,122,.07);
+}
+
+.diary-entry-date {
+  margin-bottom:12px;
+  color:#a66d8b;
+  font-size:.78rem;
+  font-weight:700;
+}
+
+.diary-entry-text {
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  line-height:1.8;
+}
+
+.diary-entry-actions {
+  display:flex;
+  justify-content:flex-end;
+  margin-top:14px;
+}
+
+.diary-delete {
+  border:1px solid rgba(190,100,130,.25);
+  border-radius:20px;
+  padding:7px 13px;
+  background:rgba(255,245,248,.9);
+  color:#a45e78;
+}
+
+.diary-empty {
+  padding:28px 18px;
+  border:1px dashed rgba(190,130,160,.4);
+  border-radius:18px;
+  color:var(--muted);
+  text-align:center;
+  background:rgba(255,255,255,.38);
+}
+
+.diary-storage-note {
+  margin:18px 4px 0;
+  text-align:center;
+  line-height:1.6;
+}
+
+.surprise-card {text-align:center;padding:35px 24px;}
+
+.surprise-message {
+  min-height:95px;
+  display:grid;
+  place-items:center;
+  font-family:"Playfair Display",serif;
+  font-size:1.4rem;
+  line-height:1.6;
+  margin:20px 0;
+}
+
+.navigation {
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:12px;
+  margin:30px auto 0;
+}
+
+.footer {
+  text-align:center;
+  color:#a58c9a;
+  font-size:.8rem;
+  margin-top:45px;
+}
+
+.back-row {text-align:center;margin-top:30px;}
+
+.ending-card {
+  width:min(92%,600px);
+  padding:45px 28px;
+  text-align:center;
+  margin:30px auto;
+}
+
+.ending-symbol {font-size:3rem;margin-bottom:20px;}
+
+/* SETTINGS DESIGN */
+
+.settings-card {
+  padding:30px;
+  max-width:560px;
+  margin:0 auto;
+}
+
+.settings-icon {
+  width:75px;
+  height:75px;
+  display:grid;
+  place-items:center;
+  font-size:2.2rem;
+  background:linear-gradient(145deg,#fff2f7,#e9ddfb);
+  border-radius:23px;
+  margin:0 auto 20px;
+}
+
+.settings-input {
+  display:block;
+  width:100%;
+  padding:14px 16px;
+  border:1px solid rgba(217,130,170,.4);
+  border-radius:15px;
+  background:rgba(255,255,255,.8);
+  color:var(--text);
+  font:inherit;
+  margin-top:10px;
+}
+
+.settings-label {
+  display:block;
+  color:#805d70;
+  font-weight:600;
+  margin-top:20px;
+}
+
+.settings-description {
+  color:var(--muted);
+  font-size:.86rem;
+  margin-top:8px;
+}
+
+.settings-buttons {
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-top:24px;
+}
+
+.settings-status {
+  color:#6e8b70;
+  min-height:1.5em;
+  margin-top:13px;
+  font-size:.88rem;
+}
+
+@media(max-width:560px) {
+  .section-grid,.envelope-grid {grid-template-columns:1fr;}
+  .welcome-card,.ending-card {padding:35px 22px;}
+  .content-card,.settings-card {padding:21px;}
+  .topbar {padding:0 3px;}
+}
+
+@media(prefers-reduced-motion:reduce) {
+  *,*::before,*::after {
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    scroll-behavior:auto!important;
+    transition-duration:.01ms!important;
+  }
+}
+</style>
 </head>
 
 <body>
-  <div class="decorations" id="decorations" aria-hidden="true"></div>
 
-  <!-- WELCOME SCREEN -->
-  <section class="screen center-screen active" id="welcome">
-    <div class="welcome-card glass">
-      <div class="moon">🌼</div>
-      <div class="eyebrow">A small note of friendship</div>
-      <h1 id="welcomeName">Hey, Sunshine!</h1>
+<div class="decorations" id="decorations" aria-hidden="true"></div>
 
-      <p class="subtitle" id="welcomeSubtitle">
-        I put together a small page with cheerful notes and friendly reminders. Just a friendly gesture—take your time and explore.
+<!-- WELCOME SCREEN -->
+<section class="screen center-screen active" id="welcome">
+  <div class="welcome-card glass">
+    <div class="moon">🌼</div>
+    <div class="eyebrow">A small note of friendship</div>
+    <h1 id="welcomeName">Hey, Sunshine!</h1>
+
+    <p class="subtitle" id="welcomeSubtitle">
+      I made a tiny corner of the internet just for you.
+    </p>
+
+    <div style="max-width:340px;margin:0 auto 18px;text-align:left;">
+      <label for="visitorName" style="display:block;margin-bottom:8px;color:#805d70;font-weight:600;">
+        What should I call you?
+      </label>
+
+      <input
+        id="visitorName"
+        type="text"
+        maxlength="40"
+        autocomplete="given-name"
+        placeholder="Enter your name"
+        class="settings-input"
+      >
+
+      <p id="nameError" role="alert" style="display:none;color:#b34f72;font-size:.82rem;margin-top:7px;">
+        Please enter your name to continue.
       </p>
-
-      <div id="nameEntry" style="max-width:340px;margin:0 auto 18px;text-align:left;">
-        <label for="visitorName" style="display:block;margin-bottom:8px;color:#805d70;font-weight:600;">
-          What should I call you?
-        </label>
-
-        <input
-          id="visitorName"
-          type="text"
-          maxlength="40"
-          autocomplete="given-name"
-          placeholder="Enter your name"
-          style="width:100%;padding:13px 16px;border:1px solid #e7bfd2;border-radius:16px;background:rgba(255,255,255,.8);color:#594653;font:inherit;outline-color:#d982aa;"
-        >
-
-        <p
-          id="nameError"
-          role="alert"
-          style="display:none;color:#b34f72;font-size:.82rem;margin-top:7px;"
-        >
-          Please enter your name to continue.
-        </p>
-      </div>
-
-      <button class="primary-btn" onclick="startExperience()">
-        Let's Explore ✨
-      </button>
-
-      <p class="small-note">Made with kindness and friendly thoughts.</p>
     </div>
-  </section>
 
-  <!-- HOME SCREEN -->
-  <section class="screen" id="home">
-    <div class="topbar">
-      <div class="brand">A Friendly Little Space</div>
+    <button class="primary-btn" onclick="startExperience()">
+      Let's Explore ✨
+    </button>
+
+    <p class="small-note">Made with kindness and friendly thoughts.</p>
+  </div>
+</section>
+
+<!-- HOME SCREEN -->
+<section class="screen" id="home">
+
+  <div class="topbar">
+    <div class="brand">A Friendly Little Space</div>
+
+    <div class="topbar-actions">
+      <button class="settings-btn" onclick="openSettings()" aria-label="Open settings" title="Settings">
+        ⚙️
+      </button>
       <button class="home-btn" onclick="showScreen('welcome')">Welcome</button>
     </div>
+  </div>
 
-    <div class="page-content">
-      <div class="page-heading">
-        <div class="eyebrow">A friendly little corner</div>
-        <h2 id="homeGreeting">Where would you like to go?</h2>
-        <p>There are a few cheerful notes and friendly surprises waiting here.</p>
-      </div>
-
-      <div class="section-grid">
-
-        <button class="feature-card" onclick="showScreen('little-things')">
-          <span class="feature-icon">🌷</span>
-          <h3>Things to Appreciate</h3>
-          <p>A collection of kind words and positive reminders.</p>
-        </button>
-
-        <button class="feature-card" onclick="showScreen('open-when')">
-          <span class="feature-icon">💌</span>
-          <h3>Open When...</h3>
-          <p>Little notes for different kinds of days.</p>
-        </button>
-
-        <!-- PERSONAL DIARY CARD -->
-        <button class="feature-card" onclick="showScreen('diary')">
-          <span class="feature-icon">📔</span>
-          <h3>Personal Diary</h3>
-          <p>A little place to write down thoughts and save them with the date and time.</p>
-        </button>
-
-        <button class="feature-card" onclick="showScreen('surprise')">
-          <span class="feature-icon">🎁</span>
-          <h3>Surprise Me</h3>
-          <p>Tap to discover a random little message.</p>
-        </button>
-
-      </div>
-
-      <div class="navigation">
-        <button class="primary-btn" onclick="showScreen('ending')">
-          One Last Friendly Note
-        </button>
-      </div>
-
-      <div class="footer">
-        A little corner filled with friendly notes and good wishes.
-      </div>
-    </div>
-  </section>
-
-  <!-- THINGS TO APPRECIATE SCREEN -->
-  <section class="screen" id="little-things">
-    <div class="topbar">
-      <div class="brand">A Friendly Little Space</div>
-      <button class="home-btn" onclick="showScreen('home')">← Home</button>
+  <div class="page-content">
+    <div class="page-heading">
+      <div class="eyebrow">A friendly little corner</div>
+      <h2 id="homeGreeting">Welcome!</h2>
+      <p>There are a few cheerful notes and friendly surprises waiting here.</p>
     </div>
 
-    <div class="page-content">
-      <div class="page-heading">
-        <div class="eyebrow">A few friendly reminders</div>
-        <h2>Things to Appreciate 🌷</h2>
-        <p>
-          Sometimes small acts of kindness and the good qualities in people deserve appreciation.
-        </p>
-      </div>
+    <div class="section-grid">
 
-      <div class="content-card glass">
-        <div class="compliment-list" id="complimentList"></div>
-      </div>
-
-      <div class="back-row">
-        <button class="secondary-btn" onclick="showScreen('home')">
-          Back to the home page
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- OPEN WHEN SCREEN -->
-  <section class="screen" id="open-when">
-    <div class="topbar">
-      <div class="brand">A Friendly Little Space</div>
-      <button class="home-btn" onclick="showScreen('home')">← Home</button>
-    </div>
-
-    <div class="page-content">
-      <div class="page-heading">
-        <div class="eyebrow">A note for the moment</div>
-        <h2>Open When... 💌</h2>
-        <p>Choose an envelope. Each one has a little message inside.</p>
-      </div>
-
-      <div class="envelope-grid" id="envelopeGrid"></div>
-
-      <div class="message-box glass" id="envelopeMessage" aria-live="polite">
-        <div style="font-size:2rem;margin-bottom:12px;">🌷</div>
-        <h3 id="envelopeTitle">A little note</h3>
-        <p id="envelopeText"></p>
-      </div>
-
-      <div class="back-row">
-        <button class="secondary-btn" onclick="showScreen('home')">
-          Back to the home page
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- PERSONAL DIARY SCREEN -->
-  <section class="screen" id="diary">
-    <div class="topbar">
-      <div class="brand">A Friendly Little Space</div>
-      <button class="home-btn" onclick="showScreen('home')">← Home</button>
-    </div>
-
-    <div class="page-content">
-
-      <div class="page-heading">
-        <div class="eyebrow">A little space for her thoughts</div>
-        <h2>Personal Diary 📔</h2>
-        <p>
-          Write whatever is on your mind. Each entry is saved with the date and time.
-        </p>
-      </div>
-
-      <div class="content-card glass diary-compose">
-
-        <label class="diary-label" for="diaryEntry">
-          Dear diary...
-        </label>
-
-        <textarea
-          id="diaryEntry"
-          class="diary-textarea"
-          maxlength="10000"
-          placeholder="Write about your day, a thought, a memory, or anything you want to remember..."
-        ></textarea>
-
-        <div class="diary-compose-footer">
-          <span class="diary-hint">
-            Only you can write in this little space.
-          </span>
-
-          <button
-            class="primary-btn"
-            type="button"
-            onclick="saveDiaryEntry()"
-          >
-            Save entry ✨
-          </button>
-        </div>
-
-        <p
-          id="diaryStatus"
-          class="diary-status"
-          role="status"
-          aria-live="polite"
-        ></p>
-      </div>
-
-      <div class="diary-list-heading">
-        <h3>Your diary entries</h3>
-        <span id="diaryCount" class="diary-count">0 entries</span>
-      </div>
-
-      <div id="diaryEntries" class="diary-entries"></div>
-
-      <p class="diary-storage-note">
-        🔒 Entries are saved in this browser on this device. They won't automatically sync to another phone or computer.
-      </p>
-
-      <div class="back-row">
-        <button class="secondary-btn" onclick="showScreen('home')">
-          Back to the home page
-        </button>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- SURPRISE SCREEN -->
-  <section class="screen" id="surprise">
-    <div class="topbar">
-      <div class="brand">A Friendly Little Space</div>
-      <button class="home-btn" onclick="showScreen('home')">← Home</button>
-    </div>
-
-    <div class="page-content">
-      <div class="page-heading">
-        <div class="eyebrow">A friendly surprise</div>
-        <h2>Surprise Me 🎁</h2>
-        <p>You never know which little message will appear.</p>
-      </div>
-
-      <div class="content-card glass surprise-card">
-        <div style="font-size:3rem;">🎀</div>
-
-        <div class="surprise-message" id="surpriseMessage" aria-live="polite">
-          Ready for a little surprise?
-        </div>
-
-        <button class="primary-btn" onclick="newSurprise()">
-          Show me something ✨
-        </button>
-      </div>
-
-      <div class="back-row">
-        <button class="secondary-btn" onclick="showScreen('home')">
-          Back to the home page
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- SPECIAL ENDING -->
-  <section class="screen center-screen" id="ending">
-    <div class="ending-card glass">
-      <div class="ending-symbol">🌸</div>
-      <div class="eyebrow">Before you go</div>
-      <h2 id="endingTitle">A Friendly Reminder</h2>
-
-      <p id="endingMessage">
-        No matter how ordinary a day may seem, there is always something
-        lovely about the little things. I hope this tiny corner made you smile.
-      </p>
-
-      <div style="font-size:2rem;margin:25px 0;">✦ 🌷 ✦</div>
-
-      <button class="primary-btn" onclick="showScreen('home')">
-        Explore a little more
+      <button class="feature-card" onclick="showScreen('little-things')">
+        <span class="feature-icon">🌷</span>
+        <h3>Things to Appreciate</h3>
+        <p>A collection of kind words and positive reminders.</p>
       </button>
 
-      <p class="small-note">That's all for now. Take care! ♡</p>
+      <button class="feature-card" onclick="showScreen('open-when')">
+        <span class="feature-icon">💌</span>
+        <h3>Open When...</h3>
+        <p>Little notes for different kinds of days.</p>
+      </button>
+
+      <button class="feature-card" onclick="showScreen('diary')">
+        <span class="feature-icon">📔</span>
+        <h3>Personal Diary</h3>
+        <p>A little place to write thoughts and save them with the date and time.</p>
+      </button>
+
+      <button class="feature-card" onclick="showScreen('surprise')">
+        <span class="feature-icon">🎁</span>
+        <h3>Surprise Me</h3>
+        <p>Tap to discover a random little message.</p>
+      </button>
+
     </div>
-  </section>
-
-  <script>
-    /* =========================================
-       PERSONAL DETAILS
-    ========================================= */
-
-    const personalDetails = {
-      websiteTitle: "A Friendly Little Space",
-      herName: "Sunshine",
-
-      welcomeSubtitle:
-        "I made a tiny corner of the internet just for you. Take your time and explore.",
-
-      compliments: [
-        "You bring a positive energy to the people around you.",
-        "Your friendly nature can make a day better.",
-        "Your thoughts, ideas and dreams matter. Keep believing in them.",
-        "You deserve kindness, happiness and good things in life.",
-        "Keep being yourself and doing things in your own way.",
-        "Even small things you do can make a positive difference."
-      ],
-
-      openWhenMessages: [
-        {
-          title: "When you're having a difficult day",
-          icon: "☁️",
-          message: "Take things one step at a time. You don't have to figure everything out today. Be patient with yourself."
-        },
-        {
-          title: "When you need a smile",
-          icon: "🌻",
-          message: "Here's a little reminder that good moments are still waiting ahead. I hope something lovely happens to you today."
-        },
-        {
-          title: "When you feel tired",
-          icon: "🌙",
-          message: "It's okay to slow down and take a break. You deserve rest just as much as you deserve success."
-        },
-        {
-          title: "When you need encouragement",
-          icon: "⭐",
-          message: "Keep going at your own pace. You are capable of learning, growing and doing wonderful things."
-        },
-        {
-          title: "When you feel unnoticed",
-          icon: "💗",
-          message: "The little things you do matter more than you might realise. Never underestimate the good you bring into the world."
-        },
-        {
-          title: "When you just want a friendly note",
-          icon: "💌",
-          message: "Hello! This is your random reminder to smile, drink some water and remember that today can still be lovely."
-        }
-      ],
-
-      surpriseMessages: [
-        "Hope your day has a little extra colour and happiness. 🌈",
-        "Here's a reminder to be proud of how far you've come. 🌷",
-        "I hope something unexpectedly wonderful happens today. ✨",
-        "Wishing you a day filled with peaceful moments and happy surprises. 🌼",
-        "Keep chasing the things that make you feel excited about life. ⭐",
-        "Just a reminder: being yourself is a good thing. 🌸",
-        "May your next little adventure be a lovely one. 🦋"
-      ],
-
-      endingTitle: "A Friendly Reminder",
-
-      endingMessage:
-        "Even an ordinary day can have a few good moments. I hope this little page brought a smile to your face. Take care, and all the best!"
-    };
-
-
-    /* =========================================
-       WEBSITE SETUP AND VISITOR NAME
-    ========================================= */
-
-    document.title = personalDetails.websiteTitle;
-
-    const VISITOR_NAME_KEY = "friendlyLittleSpaceVisitorName";
-
-    function applyVisitorName(name) {
-      const safeName = name.trim();
-
-      document.getElementById("welcomeName").textContent =
-        "Hey, " + safeName + "!";
-
-      document.getElementById("homeGreeting").textContent =
-        "Welcome, " + safeName + "!";
-    }
-
-    function startExperience() {
-      const input = document.getElementById("visitorName");
-      const error = document.getElementById("nameError");
-      const name = input.value.trim();
-
-      if (!name) {
-        error.style.display = "block";
-        input.focus();
-        return;
-      }
 
-      error.style.display = "none";
-
-      try {
-        localStorage.setItem(VISITOR_NAME_KEY, name);
-      } catch (error) {
-        // Name is still used for this visit if storage is unavailable.
-      }
-
-      applyVisitorName(name);
-      showScreen("home");
-    }
-
-    document.getElementById("welcomeSubtitle").textContent =
-      personalDetails.welcomeSubtitle;
-
-    // Returning visitors go directly to the home screen.
-    try {
-      const savedName = localStorage.getItem(VISITOR_NAME_KEY);
-
-      if (savedName && savedName.trim()) {
-        applyVisitorName(savedName);
-        showScreen("home");
-      } else {
-        document.getElementById("welcomeName").textContent =
-          "Hey, Sunshine!";
-      }
-    } catch (error) {
-      document.getElementById("welcomeName").textContent =
-        "Hey, Sunshine!";
-    }
-
-    document.getElementById("endingTitle").textContent =
-      personalDetails.endingTitle;
-
-    document.getElementById("endingMessage").textContent =
-      personalDetails.endingMessage;
-
-    document.getElementById("visitorName").addEventListener(
-      "keydown",
-      event => {
-        if (event.key === "Enter") {
-          startExperience();
-        }
-      }
-    );
-
-
-    /* =========================================
-       SCREEN NAVIGATION
-    ========================================= */
-
-    function showScreen(screenId) {
-      document.querySelectorAll(".screen").forEach(screen => {
-        screen.classList.remove("active");
-      });
-
-      const target = document.getElementById(screenId);
-
-      if (target) {
-        target.classList.add("active");
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-
-      if (screenId === "open-when") {
-        document
-          .getElementById("envelopeMessage")
-          .classList.remove("show");
-      }
-
-      if (screenId === "diary") {
-        renderDiaryEntries();
-      }
-    }
-
-
-    /* =========================================
-       THINGS TO APPRECIATE
-    ========================================= */
-
-    function loadCompliments() {
-      const list = document.getElementById("complimentList");
-
-      list.innerHTML = "";
-
-      personalDetails.compliments.forEach(message => {
-        const item = document.createElement("div");
-
-        item.className = "compliment";
-        item.textContent = "♡  " + message;
-
-        list.appendChild(item);
-      });
-    }
-
-
-    /* =========================================
-       OPEN WHEN ENVELOPES
-    ========================================= */
-
-    function loadEnvelopes() {
-      const grid = document.getElementById("envelopeGrid");
-
-      grid.innerHTML = "";
-
-      personalDetails.openWhenMessages.forEach((item, index) => {
-        const button = document.createElement("button");
-
-        button.className = "envelope";
-
-        const icon = document.createElement("span");
-        icon.textContent = item.icon;
-
-        const title = document.createElement("strong");
-        title.textContent = item.title;
-
-        const hint = document.createElement("small");
-        hint.textContent = "Tap to open";
-
-        button.append(icon, title, hint);
-
-        button.addEventListener("click", () => {
-          openEnvelope(index);
-        });
-
-        grid.appendChild(button);
-      });
-    }
-
-    function openEnvelope(index) {
-      const item = personalDetails.openWhenMessages[index];
-
-      document.getElementById("envelopeTitle").textContent =
-        item.title;
-
-      document.getElementById("envelopeText").textContent =
-        item.message;
-
-      const box = document.getElementById("envelopeMessage");
-
-      box.classList.remove("show");
-
-      requestAnimationFrame(() => {
-        box.classList.add("show");
-      });
-    }
-
-
-    /* =========================================
-       PERSONAL DIARY
-    ========================================= */
-
-    const DIARY_STORAGE_KEY =
-      "friendlyLittleSpaceDiaryEntries";
-
-    function getDiaryEntries() {
-      try {
-        const saved = localStorage.getItem(DIARY_STORAGE_KEY);
-
-        const entries = saved ? JSON.parse(saved) : [];
-
-        return Array.isArray(entries) ? entries : [];
-      } catch (error) {
-        return [];
-      }
-    }
-
-    function saveDiaryEntry() {
-      const field = document.getElementById("diaryEntry");
-      const status = document.getElementById("diaryStatus");
-
-      const text = field.value.trim();
-
-      if (!text) {
-        status.textContent =
-          "Write a little something before saving.";
-
-        field.focus();
-        return;
-      }
-
-      const entries = getDiaryEntries();
-
-      entries.unshift({
-        id:
-          Date.now().toString(36) +
-          Math.random().toString(36).slice(2),
-
-        text: text,
-
-        createdAt: new Date().toISOString()
-      });
-
-      try {
-        localStorage.setItem(
-          DIARY_STORAGE_KEY,
-          JSON.stringify(entries)
-        );
-
-        field.value = "";
-
-        status.textContent =
-          "Your diary entry has been saved. 🌷";
-
-        renderDiaryEntries();
-
-      } catch (error) {
-        status.textContent =
-          "Couldn't save this entry. This browser may be out of storage space or have storage disabled.";
-      }
-    }
-
-    function deleteDiaryEntry(id) {
-      if (!confirm("Delete this diary entry? This cannot be undone.")) {
-        return;
-      }
-
-      const entries = getDiaryEntries().filter(
-        entry => entry.id !== id
-      );
-
-      try {
-        localStorage.setItem(
-          DIARY_STORAGE_KEY,
-          JSON.stringify(entries)
-        );
-
-        renderDiaryEntries();
-
-        document.getElementById("diaryStatus").textContent =
-          "Entry deleted.";
-
-      } catch (error) {
-        document.getElementById("diaryStatus").textContent =
-          "Couldn't update the diary. Please try again.";
-      }
-    }
-
-    function renderDiaryEntries() {
-      const container =
-        document.getElementById("diaryEntries");
-
-      const count =
-        document.getElementById("diaryCount");
-
-      const entries = getDiaryEntries();
-
-      container.innerHTML = "";
-
-      count.textContent =
-        entries.length +
-        (entries.length === 1 ? " entry" : " entries");
-
-      if (!entries.length) {
-        const empty = document.createElement("div");
-
-        empty.className = "diary-empty";
-
-        empty.textContent =
-          "No entries yet. Your first little note can go here. ✨";
-
-        container.appendChild(empty);
-
-        return;
-      }
-
-      entries.forEach(entry => {
-        const card = document.createElement("article");
-
-        card.className = "diary-entry";
-
-        const date = document.createElement("div");
-
-        date.className = "diary-entry-date";
-
-        const parsedDate = new Date(entry.createdAt);
-
-        date.textContent = Number.isNaN(parsedDate.getTime())
-          ? "Saved entry"
-          : new Intl.DateTimeFormat(undefined, {
-              dateStyle: "full",
-              timeStyle: "short"
-            }).format(parsedDate);
-
-        const body = document.createElement("p");
-
-        body.className = "diary-entry-text";
-        body.textContent = entry.text;
-
-        const actions = document.createElement("div");
-
-        actions.className = "diary-entry-actions";
-
-        const remove = document.createElement("button");
-
-        remove.className = "diary-delete";
-        remove.type = "button";
-        remove.textContent = "Delete entry";
-
-        remove.addEventListener("click", () => {
-          deleteDiaryEntry(entry.id);
-        });
-
-        actions.appendChild(remove);
-
-        card.append(date, body, actions);
-
-        container.appendChild(card);
-      });
-    }
-
-
-    /* =========================================
-       RANDOM SURPRISE
-    ========================================= */
-
-    let lastSurpriseIndex = -1;
-
-    function newSurprise() {
-      const messages = personalDetails.surpriseMessages;
-
-      if (!messages.length) return;
-
-      let index = Math.floor(
-        Math.random() * messages.length
-      );
-
-      if (messages.length > 1) {
-        while (index === lastSurpriseIndex) {
-          index = Math.floor(
-            Math.random() * messages.length
-          );
-        }
-      }
-
-      lastSurpriseIndex = index;
-
-      const display =
-        document.getElementById("surpriseMessage");
-
-      display.style.animation = "none";
-
-      display.textContent = messages[index];
-
-      requestAnimationFrame(() => {
-        display.style.animation = "pop .35s ease both";
-      });
-    }
-
-
-    /* =========================================
-       FLOATING DECORATIONS
-    ========================================= */
-
-    const decorationSymbols = [
-      "✿", "✦", "✧", "❀", "⋆", "☀", "❋"
-    ];
-
-    function createDecoration() {
-      const container =
-        document.getElementById("decorations");
-
-      const item = document.createElement("span");
-
-      item.className = "floating";
-
-      item.textContent =
-        decorationSymbols[
-          Math.floor(Math.random() * decorationSymbols.length)
-        ];
-
-      item.style.left = Math.random() * 100 + "%";
-
-      item.style.fontSize =
-        (12 + Math.random() * 20) + "px";
-
-      item.style.animationDuration =
-        (9 + Math.random() * 9) + "s";
-
-      item.style.opacity =
-        0.3 + Math.random() * 0.4;
-
-      container.appendChild(item);
-
-      setTimeout(() => item.remove(), 19000);
-    }
-
-
-    /* =========================================
-       INITIALIZE EVERYTHING
-    ========================================= */
-
-    loadCompliments();
-
-    loadEnvelopes();
+    <div class="navigation">
+      <button class="primary-btn" onclick="showScreen('ending')">
+        One Last Friendly Note
+      </button>
+    </div>
+
+    <div class="footer">
+      A little corner filled with friendly notes and good wishes.
+    </div>
+  </div>
+</section>
+
+<!-- SETTINGS SCREEN -->
+<section class="screen" id="settings">
+
+  <div class="topbar">
+    <div class="brand">A Friendly Little Space</div>
+    <button class="home-btn" onclick="showScreen('home')">← Home</button>
+  </div>
+
+  <div class="page-content">
+
+    <div class="page-heading">
+      <div class="eyebrow">Make this space yours</div>
+      <h2>Settings ⚙️</h2>
+      <p>Manage your personal details for this little corner.</p>
+    </div>
+
+    <div class="settings-card glass">
+
+      <div style="text-align:center;">
+        <div class="settings-icon">🌸</div>
+        <h3>Personalise Your Space</h3>
+        <p class="settings-description">
+          You can change the name displayed around the website whenever you like.
+        </p>
+      </div>
+
+      <label class="settings-label" for="renameInput">
+        Your name
+      </label>
+
+      <input
+        type="text"
+        id="renameInput"
+        class="settings-input"
+        maxlength="40"
+        placeholder="Enter a new name"
+      >
+
+      <p class="settings-description">
+        This name will appear in your welcome message and home page.
+      </p>
+
+      <div class="settings-buttons">
+        <button class="primary-btn" onclick="saveNewName()">
+          Save Changes ✨
+        </button>
+
+        <button class="secondary-btn" onclick="showScreen('home')">
+          Cancel
+        </button>
+      </div>
+
+      <p id="settingsStatus" class="settings-status" role="status" aria-live="polite"></p>
+
+    </div>
+
+    <div class="back-row">
+      <button class="secondary-btn" onclick="showScreen('home')">
+        ← Back to Home
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<!-- THINGS TO APPRECIATE -->
+<section class="screen" id="little-things">
+  <div class="topbar">
+    <div class="brand">A Friendly Little Space</div>
+    <button class="home-btn" onclick="showScreen('home')">← Home</button>
+  </div>
+
+  <div class="page-content">
+    <div class="page-heading">
+      <div class="eyebrow">A few friendly reminders</div>
+      <h2>Things to Appreciate 🌷</h2>
+      <p>Sometimes small acts of kindness and good qualities deserve appreciation.</p>
+    </div>
+
+    <div class="content-card glass">
+      <div class="compliment-list" id="complimentList"></div>
+    </div>
+
+    <div class="back-row">
+      <button class="secondary-btn" onclick="showScreen('home')">Back to Home</button>
+    </div>
+  </div>
+</section>
+
+<!-- OPEN WHEN -->
+<section class="screen" id="open-when">
+  <div class="topbar">
+    <div class="brand">A Friendly Little Space</div>
+    <button class="home-btn" onclick="showScreen('home')">← Home</button>
+  </div>
+
+  <div class="page-content">
+    <div class="page-heading">
+      <div class="eyebrow">A note for the moment</div>
+      <h2>Open When... 💌</h2>
+      <p>Choose an envelope. Each one has a little message inside.</p>
+    </div>
+
+    <div class="envelope-grid" id="envelopeGrid"></div>
+
+    <div class="message-box glass" id="envelopeMessage" aria-live="polite">
+      <div style="font-size:2rem;margin-bottom:12px;">🌷</div>
+      <h3 id="envelopeTitle">A little note</h3>
+      <p id="envelopeText"></p>
+    </div>
+
+    <div class="back-row">
+      <button class="secondary-btn" onclick="showScreen('home')">Back to Home</button>
+    </div>
+  </div>
+</section>
+
+<!-- PERSONAL DIARY -->
+<section class="screen" id="diary">
+  <div class="topbar">
+    <div class="brand">A Friendly Little Space</div>
+    <button class="home-btn" onclick="showScreen('home')">← Home</button>
+  </div>
+
+  <div class="page-content">
+    <div class="page-heading">
+      <div class="eyebrow">A little space for your thoughts</div>
+      <h2>Personal Diary 📔</h2>
+      <p>Write whatever is on your mind. Each entry is saved with the date and time.</p>
+    </div>
+
+    <div class="content-card glass diary-compose">
+      <label class="diary-label" for="diaryEntry">Dear diary...</label>
+
+      <textarea
+        id="diaryEntry"
+        class="diary-textarea"
+        maxlength="10000"
+        placeholder="Write about your day, a thought, a memory, or anything you want to remember..."
+      ></textarea>
+
+      <div class="diary-compose-footer">
+        <span class="diary-hint">Your thoughts, your little space.</span>
+        <button class="primary-btn" onclick="saveDiaryEntry()">Save Entry ✨</button>
+      </div>
+
+      <p id="diaryStatus" class="diary-status" role="status" aria-live="polite"></p>
+    </div>
+
+    <div class="diary-list-heading">
+      <h3>Your Diary Entries</h3>
+      <span id="diaryCount" class="diary-count">0 entries</span>
+    </div>
+
+    <div id="diaryEntries" class="diary-entries"></div>
+
+    <p class="diary-storage-note">
+      🔒 Entries are saved in this browser on this device. They won't automatically sync to another device.
+    </p>
+
+    <div class="back-row">
+      <button class="secondary-btn" onclick="showScreen('home')">Back to Home</button>
+    </div>
+  </div>
+</section>
+
+<!-- SURPRISE -->
+<section class="screen" id="surprise">
+  <div class="topbar">
+    <div class="brand">A Friendly Little Space</div>
+    <button class="home-btn" onclick="showScreen('home')">← Home</button>
+  </div>
+
+  <div class="page-content">
+    <div class="page-heading">
+      <div class="eyebrow">A friendly surprise</div>
+      <h2>Surprise Me 🎁</h2>
+      <p>You never know which little message will appear.</p>
+    </div>
+
+    <div class="content-card glass surprise-card">
+      <div style="font-size:3rem;">🎀</div>
+      <div class="surprise-message" id="surpriseMessage" aria-live="polite">
+        Ready for a little surprise?
+      </div>
+      <button class="primary-btn" onclick="newSurprise()">Show Me Something ✨</button>
+    </div>
+
+    <div class="back-row">
+      <button class="secondary-btn" onclick="showScreen('home')">Back to Home</button>
+    </div>
+  </div>
+</section>
+
+<!-- ENDING -->
+<section class="screen center-screen" id="ending">
+  <div class="ending-card glass">
+    <div class="ending-symbol">🌸</div>
+    <div class="eyebrow">Before you go</div>
+    <h2>A Friendly Reminder</h2>
+    <p>
+      Even an ordinary day can have a few good moments.
+      I hope this little page brought a smile to your face.
+      Take care, and all the best!
+    </p>
+    <div style="font-size:2rem;margin:25px 0;">✦ 🌷 ✦</div>
+    <button class="primary-btn" onclick="showScreen('home')">Explore a Little More</button>
+    <p class="small-note">That's all for now. Take care! ♡</p>
+  </div>
+</section>
+
+<script>
+
+/* ==================================
+   STORAGE KEYS
+================================== */
+
+const VISITOR_NAME_KEY = "friendlyLittleSpaceVisitorName";
+const DIARY_STORAGE_KEY = "friendlyLittleSpaceDiaryEntries";
+
+
+/* ==================================
+   VISITOR NAME AND RENAME SETTINGS
+================================== */
+
+let visitorName = "Sunshine";
+
+function applyVisitorName(name) {
+  visitorName = name.trim() || "Sunshine";
+
+  document.getElementById("welcomeName").textContent =
+    "Hey, " + visitorName + "!";
+
+  document.getElementById("homeGreeting").textContent =
+    "Welcome, " + visitorName + "!";
+}
+
+function startExperience() {
+  const input = document.getElementById("visitorName");
+  const error = document.getElementById("nameError");
+  const name = input.value.trim();
+
+  if (!name) {
+    error.style.display = "block";
+    input.focus();
+    return;
+  }
+
+  error.style.display = "none";
+
+  try {
+    localStorage.setItem(VISITOR_NAME_KEY, name);
+  } catch (error) {}
+
+  applyVisitorName(name);
+  showScreen("home");
+}
+
+function openSettings() {
+  document.getElementById("renameInput").value = visitorName;
+
+  document.getElementById("settingsStatus").textContent = "";
+
+  showScreen("settings");
+  document.getElementById("renameInput").focus();
+}
+
+function saveNewName() {
+  const input = document.getElementById("renameInput");
+  const status = document.getElementById("settingsStatus");
+
+  const newName = input.value.trim();
+
+  if (!newName) {
+    status.style.color = "#b34f72";
+    status.textContent = "Please enter a name first.";
+    input.focus();
+    return;
+  }
+
+  try {
+    localStorage.setItem(VISITOR_NAME_KEY, newName);
+  } catch (error) {
+    status.style.color = "#b34f72";
+    status.textContent = "Couldn't save the name in this browser.";
+    return;
+  }
+
+  applyVisitorName(newName);
+
+  status.style.color = "#6e8b70";
+  status.textContent = "Your name has been updated successfully! 🌸";
+
+  setTimeout(() => {
+    showScreen("home");
+  }, 1000);
+}
+
+document.getElementById("visitorName").addEventListener("keydown", event => {
+  if (event.key === "Enter") startExperience();
+});
+
+document.getElementById("renameInput").addEventListener("keydown", event => {
+  if (event.key === "Enter") saveNewName();
+});
+
+
+/* ==================================
+   RETURNING VISITOR
+================================== */
+
+try {
+  const savedName = localStorage.getItem(VISITOR_NAME_KEY);
+
+  if (savedName && savedName.trim()) {
+    applyVisitorName(savedName);
+    showScreen("home");
+  }
+} catch (error) {}
+
+
+/* ==================================
+   SCREEN NAVIGATION
+================================== */
+
+function showScreen(screenId) {
+  document.querySelectorAll(".screen").forEach(screen => {
+    screen.classList.remove("active");
+  });
+
+  const target = document.getElementById(screenId);
+
+  if (target) {
+    target.classList.add("active");
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+
+  if (screenId === "open-when") {
+    document.getElementById("envelopeMessage").classList.remove("show");
+  }
+
+  if (screenId === "diary") {
+    renderDiaryEntries();
+  }
+}
+
+
+/* ==================================
+   THINGS TO APPRECIATE
+================================== */
+
+const compliments = [
+  "You bring a positive energy to the people around you.",
+  "Your friendly nature can make a day better.",
+  "Your thoughts, ideas and dreams matter. Keep believing in them.",
+  "You deserve kindness, happiness and good things in life.",
+  "Keep being yourself and doing things in your own way.",
+  "Even small things you do can make a positive difference."
+];
+
+function loadCompliments() {
+  const list = document.getElementById("complimentList");
+  list.innerHTML = "";
+
+  compliments.forEach(message => {
+    const item = document.createElement("div");
+    item.className = "compliment";
+    item.textContent = "♡  " + message;
+    list.appendChild(item);
+  });
+}
+
+
+/* ==================================
+   OPEN WHEN ENVELOPES
+================================== */
+
+const openWhenMessages = [
+  {
+    title:"When you're having a difficult day",
+    icon:"☁️",
+    message:"Take things one step at a time. You don't have to figure everything out today. Be patient with yourself."
+  },
+  {
+    title:"When you need a smile",
+    icon:"🌻",
+    message:"Here's a little reminder that good moments are still waiting ahead. I hope something lovely happens to you today."
+  },
+  {
+    title:"When you feel tired",
+    icon:"🌙",
+    message:"It's okay to slow down and take a break. You deserve rest just as much as you deserve success."
+  },
+  {
+    title:"When you need encouragement",
+    icon:"⭐",
+    message:"Keep going at your own pace. You are capable of learning, growing and doing wonderful things."
+  },
+  {
+    title:"When you feel unnoticed",
+    icon:"💗",
+    message:"The little things you do matter more than you might realise. Never underestimate the good you bring into the world."
+  },
+  {
+    title:"When you just want a friendly note",
+    icon:"💌",
+    message:"Hello! This is your random reminder to smile, drink some water and remember that today can still be lovely."
+  }
+];
+
+function loadEnvelopes() {
+  const grid = document.getElementById("envelopeGrid");
+  grid.innerHTML = "";
+
+  openWhenMessages.forEach((item,index) => {
+    const button = document.createElement("button");
+    button.className = "envelope";
+
+    const icon = document.createElement("span");
+    icon.textContent = item.icon;
+
+    const title = document.createElement("strong");
+    title.textContent = item.title;
+
+    const hint = document.createElement("small");
+    hint.textContent = "Tap to open";
+
+    button.append(icon,title,hint);
+
+    button.addEventListener("click",() => openEnvelope(index));
+
+    grid.appendChild(button);
+  });
+}
+
+function openEnvelope(index) {
+  const item = openWhenMessages[index];
+
+  document.getElementById("envelopeTitle").textContent = item.title;
+  document.getElementById("envelopeText").textContent = item.message;
+
+  const box = document.getElementById("envelopeMessage");
+
+  box.classList.remove("show");
+
+  requestAnimationFrame(() => {
+    box.classList.add("show");
+  });
+}
+
+
+/* ==================================
+   PERSONAL DIARY
+================================== */
+
+function getDiaryEntries() {
+  try {
+    const saved = localStorage.getItem(DIARY_STORAGE_KEY);
+    const entries = saved ? JSON.parse(saved) : [];
+
+    return Array.isArray(entries) ? entries : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function saveDiaryEntry() {
+  const field = document.getElementById("diaryEntry");
+  const status = document.getElementById("diaryStatus");
+  const text = field.value.trim();
+
+  if (!text) {
+    status.textContent = "Write a little something before saving.";
+    field.focus();
+    return;
+  }
+
+  const entries = getDiaryEntries();
+
+  entries.unshift({
+    id:Date.now().toString(36) + Math.random().toString(36).slice(2),
+    text:text,
+    createdAt:new Date().toISOString()
+  });
+
+  try {
+    localStorage.setItem(DIARY_STORAGE_KEY,JSON.stringify(entries));
+
+    field.value = "";
+    status.textContent = "Your diary entry has been saved. 🌷";
 
     renderDiaryEntries();
+  } catch (error) {
+    status.textContent = "Couldn't save this entry. Please try again.";
+  }
+}
 
-    for (let i = 0; i < 12; i++) {
-      setTimeout(createDecoration, i * 250);
+function deleteDiaryEntry(id) {
+  if (!confirm("Delete this diary entry? This cannot be undone.")) return;
+
+  const entries = getDiaryEntries().filter(entry => entry.id !== id);
+
+  try {
+    localStorage.setItem(DIARY_STORAGE_KEY,JSON.stringify(entries));
+    renderDiaryEntries();
+
+    document.getElementById("diaryStatus").textContent = "Entry deleted.";
+  } catch (error) {
+    document.getElementById("diaryStatus").textContent = "Couldn't update the diary.";
+  }
+}
+
+function renderDiaryEntries() {
+  const container = document.getElementById("diaryEntries");
+  const count = document.getElementById("diaryCount");
+  const entries = getDiaryEntries();
+
+  container.innerHTML = "";
+
+  count.textContent = entries.length +
+    (entries.length === 1 ? " entry" : " entries");
+
+  if (!entries.length) {
+    const empty = document.createElement("div");
+    empty.className = "diary-empty";
+    empty.textContent = "No entries yet. Your first little note can go here. ✨";
+    container.appendChild(empty);
+    return;
+  }
+
+  entries.forEach(entry => {
+    const card = document.createElement("article");
+    card.className = "diary-entry";
+
+    const date = document.createElement("div");
+    date.className = "diary-entry-date";
+
+    const parsedDate = new Date(entry.createdAt);
+
+    date.textContent = Number.isNaN(parsedDate.getTime())
+      ? "Saved entry"
+      : new Intl.DateTimeFormat(undefined,{
+          dateStyle:"full",
+          timeStyle:"short"
+        }).format(parsedDate);
+
+    const body = document.createElement("p");
+    body.className = "diary-entry-text";
+    body.textContent = entry.text;
+
+    const actions = document.createElement("div");
+    actions.className = "diary-entry-actions";
+
+    const remove = document.createElement("button");
+    remove.className = "diary-delete";
+    remove.textContent = "Delete entry";
+
+    remove.addEventListener("click",() => deleteDiaryEntry(entry.id));
+
+    actions.appendChild(remove);
+    card.append(date,body,actions);
+    container.appendChild(card);
+  });
+}
+
+
+/* ==================================
+   SURPRISE ME
+================================== */
+
+const surpriseMessages = [
+  "Hope your day has a little extra colour and happiness. 🌈",
+  "Here's a reminder to be proud of how far you've come. 🌷",
+  "I hope something unexpectedly wonderful happens today. ✨",
+  "Wishing you a day filled with peaceful moments and happy surprises. 🌼",
+  "Keep chasing the things that make you feel excited about life. ⭐",
+  "Just a reminder: being yourself is a good thing. 🌸",
+  "May your next little adventure be a lovely one. 🦋"
+];
+
+let lastSurpriseIndex = -1;
+
+function newSurprise() {
+  let index = Math.floor(Math.random()*surpriseMessages.length);
+
+  if (surpriseMessages.length > 1) {
+    while (index === lastSurpriseIndex) {
+      index = Math.floor(Math.random()*surpriseMessages.length);
     }
+  }
 
-    setInterval(createDecoration, 850);
+  lastSurpriseIndex = index;
 
-  </script>
+  const display = document.getElementById("surpriseMessage");
+
+  display.style.animation = "none";
+  display.textContent = surpriseMessages[index];
+
+  requestAnimationFrame(() => {
+    display.style.animation = "pop .35s ease both";
+  });
+}
+
+
+/* ==================================
+   FLOATING DECORATIONS
+================================== */
+
+const decorationSymbols = ["✿","✦","✧","❀","⋆","☀","❋"];
+
+function createDecoration() {
+  const container = document.getElementById("decorations");
+  const item = document.createElement("span");
+
+  item.className = "floating";
+
+  item.textContent =
+    decorationSymbols[Math.floor(Math.random()*decorationSymbols.length)];
+
+  item.style.left = Math.random()*100 + "%";
+  item.style.fontSize = (12+Math.random()*20) + "px";
+  item.style.animationDuration = (9+Math.random()*9) + "s";
+  item.style.opacity = .3+Math.random()*.4;
+
+  container.appendChild(item);
+
+  setTimeout(() => item.remove(),19000);
+}
+
+
+/* ==================================
+   INITIALISE
+================================== */
+
+loadCompliments();
+loadEnvelopes();
+renderDiaryEntries();
+
+for (let i=0;i<12;i++) {
+  setTimeout(createDecoration,i*250);
+}
+
+setInterval(createDecoration,850);
+
+</script>
+
 </body>
 </html>
