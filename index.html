@@ -151,7 +151,7 @@ p {line-height:1.8;}
   font-size:.98rem;
 }
 
-.primary-btn,.secondary-btn {
+.primary-btn,.secondary-btn,.danger-btn {
   border:none;
   border-radius:30px;
   padding:13px 25px;
@@ -171,7 +171,13 @@ p {line-height:1.8;}
   border:1px solid rgba(217,130,170,.3);
 }
 
-.primary-btn:hover,.secondary-btn:hover {
+.danger-btn {
+  color:#fff;
+  background:linear-gradient(135deg,#d77c8c,#bd6079);
+  box-shadow:0 8px 20px rgba(180,80,110,.16);
+}
+
+.primary-btn:hover,.secondary-btn:hover,.danger-btn:hover {
   transform:translateY(-3px);
   box-shadow:0 12px 25px rgba(190,116,158,.2);
 }
@@ -259,6 +265,15 @@ p {line-height:1.8;}
   color:var(--muted);
   max-width:500px;
   margin:0 auto;
+}
+
+.updates-subtitle {
+  display:block;
+  margin-top:12px;
+  color:#ad7e9a;
+  font-size:.82rem;
+  letter-spacing:.3px;
+  font-style:italic;
 }
 
 .section-grid {
@@ -523,6 +538,23 @@ p {line-height:1.8;}
   margin-top:24px;
 }
 
+.reset-area {
+  margin-top:35px;
+  padding-top:25px;
+  border-top:1px solid rgba(190,130,160,.25);
+}
+
+.reset-area h3 {
+  color:#a45e78;
+  font-size:1.15rem;
+}
+
+.reset-area p {
+  color:var(--muted);
+  font-size:.86rem;
+  margin:8px 0 16px;
+}
+
 .settings-status {
   color:#6e8b70;
   min-height:1.5em;
@@ -584,12 +616,8 @@ p {line-height:1.8;}
     <div class="moon">🌸</div>
     <div class="eyebrow">A friendly little welcome</div>
     <h1 id="returnWelcomeName">Welcome back!</h1>
-    <p class="subtitle">
-      It's lovely to have you here again. Your little corner is waiting for you.
-    </p>
-    <button class="primary-btn" onclick="showScreen('home')">
-      Go to Your Space ✨
-    </button>
+    <p class="subtitle">It's lovely to have you here again. Your little corner is waiting for you.</p>
+    <button class="primary-btn" onclick="showScreen('home')">Go to Your Space ✨</button>
     <p class="small-note">A little place for happy thoughts and friendly memories.</p>
   </div>
 </section>
@@ -609,6 +637,7 @@ p {line-height:1.8;}
       <div class="eyebrow">A friendly little corner</div>
       <h2 id="homeGreeting">Welcome!</h2>
       <p>There are a few cheerful notes and friendly surprises waiting here.</p>
+      <span class="updates-subtitle">More lovely features will be updated soon... ✨</span>
     </div>
 
     <div class="section-grid">
@@ -638,9 +667,7 @@ p {line-height:1.8;}
     </div>
 
     <div class="navigation">
-      <button class="primary-btn" onclick="showScreen('ending')">
-        One Last Friendly Note
-      </button>
+      <button class="primary-btn" onclick="showScreen('ending')">One Last Friendly Note</button>
     </div>
 
     <div class="footer">A little corner filled with friendly notes and good wishes.</div>
@@ -680,6 +707,12 @@ p {line-height:1.8;}
       </div>
 
       <p id="settingsStatus" class="settings-status" role="status" aria-live="polite"></p>
+
+      <div class="reset-area">
+        <h3>Reset Everything</h3>
+        <p>This will erase the saved name and all Personal Diary entries from this browser. The website will return to its first-time welcome page.</p>
+        <button class="danger-btn" onclick="resetEverything()">Reset Everything ↻</button>
+      </div>
     </div>
 
     <div class="back-row">
@@ -847,6 +880,14 @@ function applyVisitorName(name) {
     "Welcome back, " + visitorName + "!";
 }
 
+function getSavedName() {
+  try {
+    return localStorage.getItem(VISITOR_NAME_KEY);
+  } catch (error) {
+    return null;
+  }
+}
+
 function startExperience() {
   const input = document.getElementById("visitorName");
   const error = document.getElementById("nameError");
@@ -861,7 +902,7 @@ function startExperience() {
   error.style.display = "none";
 
   try {
-    localStorage.setItem(VISITOR_NAME_KEY, name);
+    localStorage.setItem(VISITOR_NAME_KEY,name);
   } catch (error) {}
 
   applyVisitorName(name);
@@ -878,14 +919,6 @@ function showWelcomePage() {
 
   applyVisitorName(savedName);
   showScreen("return-welcome");
-}
-
-function getSavedName() {
-  try {
-    return localStorage.getItem(VISITOR_NAME_KEY);
-  } catch (error) {
-    return null;
-  }
 }
 
 /* SETTINGS AND RENAME */
@@ -910,7 +943,7 @@ function saveNewName() {
   }
 
   try {
-    localStorage.setItem(VISITOR_NAME_KEY, newName);
+    localStorage.setItem(VISITOR_NAME_KEY,newName);
   } catch (error) {
     status.style.color = "#b34f72";
     status.textContent = "Couldn't save the name in this browser.";
@@ -922,14 +955,50 @@ function saveNewName() {
   status.style.color = "#6e8b70";
   status.textContent = "Your name has been updated successfully! 🌸";
 
-  setTimeout(() => showScreen("home"), 1000);
+  setTimeout(() => showScreen("home"),1000);
 }
 
-document.getElementById("visitorName").addEventListener("keydown", event => {
+/* RESET EVERYTHING */
+
+function resetEverything() {
+  const confirmed = confirm(
+    "Are you sure you want to reset everything?\n\n" +
+    "This will delete the saved name and ALL Personal Diary entries " +
+    "from this browser. This cannot be undone."
+  );
+
+  if (!confirmed) return;
+
+  try {
+    localStorage.removeItem(VISITOR_NAME_KEY);
+    localStorage.removeItem(DIARY_STORAGE_KEY);
+  } catch (error) {
+    alert("The browser couldn't reset the saved data. Please check your browser settings and try again.");
+    return;
+  }
+
+  visitorName = "Sunshine";
+
+  document.getElementById("visitorName").value = "";
+  document.getElementById("renameInput").value = "";
+  document.getElementById("diaryEntry").value = "";
+  document.getElementById("settingsStatus").textContent = "";
+
+  applyVisitorName("Sunshine");
+  renderDiaryEntries();
+
+  alert("Everything has been reset! The welcome page will appear now. 🌸");
+
+  showScreen("welcome");
+}
+
+/* KEYBOARD SUPPORT */
+
+document.getElementById("visitorName").addEventListener("keydown",event => {
   if (event.key === "Enter") startExperience();
 });
 
-document.getElementById("renameInput").addEventListener("keydown", event => {
+document.getElementById("renameInput").addEventListener("keydown",event => {
   if (event.key === "Enter") saveNewName();
 });
 
@@ -991,18 +1060,36 @@ function loadCompliments() {
 /* OPEN WHEN */
 
 const openWhenMessages = [
-  {title:"When you're having a difficult day",icon:"☁️",
-   message:"Take things one step at a time. You don't have to figure everything out today. Be patient with yourself."},
-  {title:"When you need a smile",icon:"🌻",
-   message:"Here's a little reminder that good moments are still waiting ahead. I hope something lovely happens to you today."},
-  {title:"When you feel tired",icon:"🌙",
-   message:"It's okay to slow down and take a break. You deserve rest just as much as you deserve success."},
-  {title:"When you need encouragement",icon:"⭐",
-   message:"Keep going at your own pace. You are capable of learning, growing and doing wonderful things."},
-  {title:"When you feel unnoticed",icon:"💗",
-   message:"The little things you do matter more than you might realise. Never underestimate the good you bring into the world."},
-  {title:"When you just want a friendly note",icon:"💌",
-   message:"Hello! This is your random reminder to smile, drink some water and remember that today can still be lovely."}
+  {
+    title:"When you're having a difficult day",
+    icon:"☁️",
+    message:"Take things one step at a time. You don't have to figure everything out today. Be patient with yourself."
+  },
+  {
+    title:"When you need a smile",
+    icon:"🌻",
+    message:"Here's a little reminder that good moments are still waiting ahead. I hope something lovely happens to you today."
+  },
+  {
+    title:"When you feel tired",
+    icon:"🌙",
+    message:"It's okay to slow down and take a break. You deserve rest just as much as you deserve success."
+  },
+  {
+    title:"When you need encouragement",
+    icon:"⭐",
+    message:"Keep going at your own pace. You are capable of learning, growing and doing wonderful things."
+  },
+  {
+    title:"When you feel unnoticed",
+    icon:"💗",
+    message:"The little things you do matter more than you might realise. Never underestimate the good you bring into the world."
+  },
+  {
+    title:"When you just want a friendly note",
+    icon:"💌",
+    message:"Hello! This is your random reminder to smile, drink some water and remember that today can still be lovely."
+  }
 ];
 
 function loadEnvelopes() {
